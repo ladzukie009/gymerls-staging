@@ -10,11 +10,13 @@ import ErrorPage from "./pages/ErrorPage";
 import ListOfUser from "./pages/ListOfUser";
 import ListOfProduct from "./pages/ListOfProduct";
 import Orders from "./pages/OrderLanding";
+import Reservation from "./pages/ReservationLanding";
 
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminListOfUser from "./pages/admin/ListOfUser";
 import AdminListOfProduct from "./pages/admin/ListOfProduct";
 import AdminOrders from "./pages/admin/OrderLanding";
+import AdminReservation from "./pages/admin/ReservationLanding";
 
 import MealLanding from "./pages/user/MealLanding";
 import CartLanding from "./pages/user/CartLanding";
@@ -34,12 +36,14 @@ function App() {
         <Route path="/list-of-user" element={<ListOfUser />} />
         <Route path="/list-of-product" element={<ListOfProduct />} />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/reservation" element={<Reservation />} />
 
         {/* admin routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/list-of-user" element={<AdminListOfUser />} />
         <Route path="/admin/list-of-product" element={<AdminListOfProduct />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
+        <Route path="/admin/reservation" element={<AdminReservation />} />
 
         {/* user routes */}
         <Route path="/user/dashboard" element={<UserDashboard />} />

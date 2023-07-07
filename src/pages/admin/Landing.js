@@ -25,7 +25,7 @@ function Landing() {
     getTime();
     getCurrentUser(localStorage.getItem("username"));
 
-    fetch("https://gymerls-api-staging.cyclic.app/api/get-user-by-role", {
+    fetch("http://localhost:3031/api/get-user-by-role", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -39,13 +39,13 @@ function Landing() {
         setUserCount(data.length);
       });
 
-    fetch("https://gymerls-api-staging.cyclic.app/api/transactions")
+    fetch("http://localhost:3031/api/transactions")
       .then((response) => response.json())
       .then((data) => {
         setOrderCount(data.length);
       });
 
-    fetch("https://gymerls-api-staging.cyclic.app/api/get-product", {
+    fetch("http://localhost:3031/api/get-product", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

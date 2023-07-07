@@ -48,7 +48,7 @@ export default function SignInSide() {
     setIsLoading(true);
     const data = new FormData(event.currentTarget);
 
-    fetch("https://gymerls-api-staging.cyclic.app/api/get-user", {
+    fetch("http://localhost:3031/api/get-user", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

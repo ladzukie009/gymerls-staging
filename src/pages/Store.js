@@ -108,13 +108,13 @@ function DrawerAppBar(props) {
         }
       });
     } else {
-      fetch("https://gymerls-api-staging.cyclic.app/api/products")
+      fetch("http://localhost:3031/api/products")
         .then((response) => response.json())
         .then((data) => {
           setItems(data);
         });
 
-      fetch("https://gymerls-api-staging.cyclic.app/api/get-cart-by-id", {
+      fetch("http://localhost:3031/api/get-cart-by-id", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -137,7 +137,7 @@ function DrawerAppBar(props) {
     setCartItemQuantity(cartItemQuantity + 1);
     setOpenSnackBar(true);
 
-    fetch("https://gymerls-api-staging.cyclic.app/api/add-to-cart", {
+    fetch("http://localhost:3031/api/add-to-cart", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -167,7 +167,7 @@ function DrawerAppBar(props) {
   };
 
   const deleteCartItem = (id) => {
-    fetch("https://gymerls-api-staging.cyclic.app/api/delete-cart", {
+    fetch("http://localhost:3031/api/delete-cart", {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",

@@ -20,7 +20,7 @@ function MealPlanning() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-      fetch("https://gymerls-api-staging.cyclic.app/api/meal-plan", {
+      fetch("http://localhost:3031/api/meal-plan", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

@@ -30,7 +30,7 @@ function Settings() {
     useState(true);
 
   useEffect(() => {
-    fetch("https://gymerls-api-staging.cyclic.app/api/get-user-by-username", {
+    fetch("http://localhost:3031/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -58,7 +58,7 @@ function Settings() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("https://gymerls-api-staging.cyclic.app/api/update-password", {
+        fetch("http://localhost:3031/api/update-password", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",

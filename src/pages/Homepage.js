@@ -33,43 +33,30 @@ function DrawerAppBar(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
+  const openInNewTab = (url) => {
+    window.location.href = url;
+  };
+
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}></Typography>
-      <Divider />
       <List>
         <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}>
-            <ListItemText primary={"Home"} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}>
+          <ListItemButton
+            sx={{ textAlign: "center" }}
+            href="https://www.facebook.com/GYMERL/"
+            target="_blank"
+          >
             <ListItemText primary={"About"} />
           </ListItemButton>
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}>
-            <ListItemText primary={"Opening Hours"} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}>
-            <ListItemText primary={"Our Classes"} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}>
-            <ListItemText primary={"Training"} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton sx={{ textAlign: "center" }}>
+          <ListItemButton
+            sx={{ textAlign: "center" }}
+            href="https://jfkpanim.wixsite.com/gymerlsfitnessgym20?fbclid=IwAR1AXnzKRmJKL_4-jysmuj9cIQ5ofH1GBi-4zJ3WKfuzn1UhbTg5qaOQAGI"
+            target="_blank"
+          >
             <ListItemText primary={"Contact"} />
           </ListItemButton>
         </ListItem>
@@ -125,12 +112,20 @@ function DrawerAppBar(props) {
             GYMERL`s Fitness Gym
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button sx={{ color: "#fff" }}>Home</Button>
-            <Button sx={{ color: "#fff" }}>About</Button>
-            <Button sx={{ color: "#fff" }}>Opening Hours</Button>
-            <Button sx={{ color: "#fff" }}>Our Classes </Button>
-            <Button sx={{ color: "#fff" }}>Training</Button>
-            <Button sx={{ color: "#fff" }}>Contact</Button>
+            <Button
+              sx={{ color: "#fff" }}
+              href="https://www.facebook.com/GYMERL/"
+              target="_blank"
+            >
+              About
+            </Button>
+            <Button
+              sx={{ color: "#fff" }}
+              href="https://jfkpanim.wixsite.com/gymerlsfitnessgym20?fbclid=IwAR1AXnzKRmJKL_4-jysmuj9cIQ5ofH1GBi-4zJ3WKfuzn1UhbTg5qaOQAGI"
+              target="_blank"
+            >
+              Contact
+            </Button>
             <Button
               sx={{ color: "#fff" }}
               onClick={(e) => {

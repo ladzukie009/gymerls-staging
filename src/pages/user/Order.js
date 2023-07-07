@@ -44,18 +44,15 @@ function Product() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetch(
-        "https://gymerls-api-staging.cyclic.app/api/get-transaction-by-username",
-        {
-          method: "POST",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
-            username: localStorage.getItem("username"),
-          }),
-        }
-      )
+      fetch("http://localhost:3031/api/get-transaction-by-username", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: localStorage.getItem("username"),
+        }),
+      })
         .then((response) => response.json())
         .then((data) => {
           setTransaction(data);

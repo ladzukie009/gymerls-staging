@@ -37,7 +37,7 @@ export default function Chart() {
   };
 
   useEffect(() => {
-    fetch("https://gymerls-api-staging.cyclic.app/api/all-user")
+    fetch("http://localhost:3031/api/all-user")
       .then((response) => response.json())
       .then((data) => {
         const super_admin_count = data.filter((u) => u.role === "super_admin");

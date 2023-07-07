@@ -27,6 +27,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ReceiptIcon from "@mui/icons-material/Receipt";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 
 import Swal from "sweetalert2";
 import Product from "./Product";
@@ -284,6 +285,35 @@ export default function MiniDrawer() {
               </ListItemIcon>
               <ListItemText sx={{ opacity: open ? 1 : 0 }}>
                 <Typography>Orders</Typography>
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/admin/reservation";
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <Tooltip title="Reservation">
+                  <AccessTimeFilledIcon />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <Typography>Reservation</Typography>
               </ListItemText>
             </ListItemButton>
           </ListItem>

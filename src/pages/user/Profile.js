@@ -29,7 +29,7 @@ export default function TemporaryDrawer() {
   };
 
   useEffect(() => {
-    fetch("https://gymerls-api-staging.cyclic.app/api/get-user-by-username", {
+    fetch("http://localhost:3031/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

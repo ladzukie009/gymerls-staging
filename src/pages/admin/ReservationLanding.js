@@ -29,7 +29,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import Swal from "sweetalert2";
-import Order from "./Order";
+import Reservation from "./Reservation";
 
 const drawerWidth = 240;
 
@@ -264,6 +264,10 @@ export default function MiniDrawer() {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/admin/orders";
+              }}
             >
               <ListItemIcon
                 sx={{
@@ -277,7 +281,7 @@ export default function MiniDrawer() {
                 </Tooltip>
               </ListItemIcon>
               <ListItemText sx={{ opacity: open ? 1 : 0 }}>
-                <Typography sx={{ fontWeight: "bold" }}>Orders</Typography>
+                <Typography>Orders</Typography>
               </ListItemText>
             </ListItemButton>
           </ListItem>
@@ -288,10 +292,6 @@ export default function MiniDrawer() {
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = "/admin/reservation";
               }}
             >
               <ListItemIcon
@@ -306,7 +306,7 @@ export default function MiniDrawer() {
                 </Tooltip>
               </ListItemIcon>
               <ListItemText sx={{ opacity: open ? 1 : 0 }}>
-                <Typography>Reservation</Typography>
+                <Typography sx={{ fontWeight: "bold" }}>Reservation</Typography>
               </ListItemText>
             </ListItemButton>
           </ListItem>
@@ -365,8 +365,7 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        {/* <Landing /> */}
-        <Order />
+        <Reservation />
       </Box>
     </Box>
   );
