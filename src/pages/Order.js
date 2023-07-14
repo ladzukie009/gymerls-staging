@@ -89,9 +89,9 @@ function Product() {
         });
 
       setIsLoading(false);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
-  }, [transaction]);
+  }, []);
 
   const formatDate = (date) => {
     var dateToFormat = new Date(date);
@@ -163,6 +163,7 @@ function Product() {
               }).then(function () {
                 setIsBtnLoading(false);
                 setOpenModalUpdate(false);
+                window.location.reload(false);
               });
             });
         });

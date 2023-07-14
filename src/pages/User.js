@@ -246,6 +246,7 @@ function User() {
           setIsBtnLoading(false);
           setOpen(false);
           setIsLoading(true);
+          window.location.reload(false);
         });
       } else {
         setIsBtnLoading(false);
@@ -335,9 +336,9 @@ function User() {
           setUsers(data);
           setIsLoading(false);
         });
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
-  }, [users]);
+  }, []);
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     "&:nth-of-type(odd)": {
@@ -443,6 +444,7 @@ function User() {
             }).then(function () {
               setOpenModalUpdate(false);
               setIsBtnLoading(false);
+              window.location.reload(false);
             });
           });
       } else {
@@ -579,6 +581,7 @@ function User() {
         }).then(function () {
           setOpenModalMealPlanning(false);
           setIsBtnLoading(false);
+          window.location.reload(false);
         });
       });
   };
@@ -639,6 +642,7 @@ function User() {
             }).then(function () {
               setOpenModalMealPlanning(false);
               setIsBtnLoading(false);
+              window.location.reload(false);
             });
           });
       } else {
@@ -688,6 +692,7 @@ function User() {
             }).then(function () {
               setOpenModalUpdatePassword(false);
               setIsBtnLoading(false);
+              window.location.reload(false);
             });
           });
       } else {
@@ -733,6 +738,7 @@ function User() {
           timer: 1500,
         }).then(function () {
           setIsBtnLoading(false);
+          window.location.reload(false);
         });
       });
   };

@@ -94,9 +94,9 @@ function Product() {
           }
           setIsLoading(false);
         });
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
-  }, [products]);
+  }, []);
 
   const formatDate = (date) => {
     var dateToFormat = new Date(date);
@@ -134,17 +134,20 @@ function Product() {
     // IMAGE
     const formData = new FormData();
     formData.append("file", uploadFile);
-    formData.append("upload_preset", "React-cloudinary");
+    // formData.append("upload_preset", "React-cloudinary"); //live
+    formData.append("upload_preset", "gymerls"); // test
 
     Axios.post(
-      "https://api.cloudinary.com/v1_1/dpruj7bhk/image/upload",
+      // "https://api.cloudinary.com/v1_1/dpruj7bhk/image/upload", //live
+      "https://api.cloudinary.com/v1_1/dy91xg32b/image/upload", //test
       formData
     )
       .then((response) => {
         callback(response.data.secure_url);
       })
       .catch((error) => {
-        console.log(error);
+        console.log("Error:", error);
+        console.log(error.message);
       });
   };
 
@@ -179,6 +182,7 @@ function Product() {
             setOpenModalProduct(false);
             setIsBtnLoading(false);
             setIsLoading(true);
+            window.location.reload(false);
           });
         });
     });
@@ -223,6 +227,7 @@ function Product() {
               }).then(function () {
                 setIsBtnLoading(false);
                 setOpenModalUpdateProduct(false);
+                window.location.reload(false);
               });
             });
         } else {

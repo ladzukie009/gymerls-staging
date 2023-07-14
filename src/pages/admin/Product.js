@@ -102,9 +102,9 @@ function Product() {
           }
           setIsLoading(false);
         });
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
-  }, [products]);
+  }, []);
 
   const formatDate = (date) => {
     var dateToFormat = new Date(date);
@@ -187,6 +187,7 @@ function Product() {
             setOpenModalProduct(false);
             setIsBtnLoading(false);
             setIsLoading(true);
+            window.location.reload(false);
           });
         });
     });
@@ -231,6 +232,7 @@ function Product() {
               }).then(function () {
                 setIsBtnLoading(false);
                 setOpenModalUpdateProduct(false);
+                window.location.reload(false);
               });
             });
         } else {

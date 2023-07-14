@@ -115,15 +115,18 @@ function Landing() {
     setFifthBatch([]);
     setLastBatch([]);
 
-    fetch("http://localhost:3031/api/get-reservation-by-date", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        reservation_date: formattedDate,
-      }),
-    })
+    fetch(
+      "http://localhost:3031/api/get-reservation-by-date-and-status-is-confirmed",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          reservation_date: formattedDate,
+        }),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log("data:", data);
