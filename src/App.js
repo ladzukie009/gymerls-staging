@@ -21,7 +21,8 @@ import AdminReservation from "./pages/admin/ReservationLanding";
 import MealLanding from "./pages/user/MealLanding";
 import CartLanding from "./pages/user/CartLanding";
 import OrderLanding from "./pages/user/OrderLanding";
-import SeetingsLanding from "./pages/user/SettingsLanding";
+import SettingsLanding from "./pages/user/SettingsLanding";
+import ScheduleLanding from "./pages/user/ScheduleLanding";
 import Store from "./pages/Store";
 
 function App() {
@@ -50,7 +51,8 @@ function App() {
         <Route path="/user/meal-plan" element={<MealLanding />} />
         <Route path="/user/cart" element={<CartLanding />} />
         <Route path="/user/order" element={<OrderLanding />} />
-        <Route path="/user/settings" element={<SeetingsLanding />} />
+        <Route path="/user/settings" element={<SettingsLanding />} />
+        <Route path="/user/schedules" element={<ScheduleLanding />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>

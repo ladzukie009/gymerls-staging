@@ -26,6 +26,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import Swal from "sweetalert2";
 import Profile from "./Profile";
@@ -283,6 +284,35 @@ export default function MiniDrawer() {
                 </Tooltip>
               </ListItemIcon>
               <ListItemText primary={"Orders"} sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/user/schedules";
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
+                }}
+              >
+                <Tooltip title="Schedule">
+                  <CalendarMonthIcon />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText
+                primary={"Schedule"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
             </ListItemButton>
           </ListItem>
         </List>

@@ -29,7 +29,7 @@ import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import Swal from "sweetalert2";
-import Landing from "./Landing";
+import Schedule from "./Schedule";
 import Profile from "./Profile";
 import { useEffect } from "react";
 
@@ -186,6 +186,10 @@ export default function MiniDrawer() {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/user/dashboard";
+              }}
             >
               <ListItemIcon
                 sx={{
@@ -199,7 +203,7 @@ export default function MiniDrawer() {
                 </Tooltip>
               </ListItemIcon>
               <ListItemText sx={{ opacity: open ? 1 : 0 }}>
-                <Typography sx={{ fontWeight: "bold" }}>Dashboard</Typography>
+                <Typography>Dashboard</Typography>
               </ListItemText>
             </ListItemButton>
           </ListItem>
@@ -294,10 +298,6 @@ export default function MiniDrawer() {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = "/user/schedules";
-              }}
             >
               <ListItemIcon
                 sx={{
@@ -310,10 +310,9 @@ export default function MiniDrawer() {
                   <CalendarMonthIcon />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText
-                primary={"Schedule"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
+              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <Typography sx={{ fontWeight: "bold" }}>Schedule</Typography>
+              </ListItemText>
             </ListItemButton>
           </ListItem>
         </List>
@@ -375,7 +374,7 @@ export default function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <Landing />
+        <Schedule />
       </Box>
     </Box>
   );
