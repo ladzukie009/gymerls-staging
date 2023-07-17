@@ -333,6 +333,7 @@ function User() {
       fetch("http://localhost:3031/api/users")
         .then((response) => response.json())
         .then((data) => {
+          setFilteredList(data);
           setUsers(data);
           setIsLoading(false);
         });
@@ -742,6 +743,15 @@ function User() {
         });
       });
   };
+  const [filteredList, setFilteredList] = new useState(users);
+
+  const filterBySearch = (e) => {
+    const results = users.filter((user) => {
+      if (e.target.value === "") return users;
+      return user.username.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setFilteredList(results);
+  };
 
   return (
     <>
@@ -756,9 +766,21 @@ function User() {
         </div>
       ) : (
         <div>
-          <Button variant="outlined" onClick={handleClickOpen}>
-            Create new user
-          </Button>
+          <Grid container>
+            <Grid item xs={12} md={7}>
+              <Button variant="outlined" onClick={handleClickOpen}>
+                Create new user
+              </Button>
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <TextField
+                label="Search username"
+                onChange={filterBySearch}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+
           {/* CREATE NEW USER */}
           <Dialog
             fullScreen={fullScreen}
@@ -2171,7 +2193,7 @@ function User() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {users
+                  {filteredList
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((user) => {
                       return (
@@ -2252,7 +2274,7 @@ function User() {
             <TablePagination
               rowsPerPageOptions={[10, 15, 20]}
               component="div"
-              count={users.length}
+              count={filteredList.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

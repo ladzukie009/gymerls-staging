@@ -31,7 +31,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Swal from "sweetalert2";
 import Landing from "./Landing";
 import Profile from "./Profile";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const drawerWidth = 240;
 
@@ -103,7 +103,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -114,6 +114,7 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
+    getCurrentUserInfo(localStorage.getItem("username"));
     const role = localStorage.getItem("role");
     validateRole(role);
   });
@@ -123,6 +124,23 @@ export default function MiniDrawer() {
     } else {
       navigate("/error");
     }
+  };
+
+  const [currentUserMembership, setCurrentUserMembership] = useState("");
+  const getCurrentUserInfo = (user) => {
+    fetch("http://localhost:3031/api/get-user-by-username", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        username: user,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentUserMembership(data[0].membership_type);
+      });
   };
 
   const logout = () => {
@@ -287,35 +305,39 @@ export default function MiniDrawer() {
               <ListItemText primary={"Orders"} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = "/user/schedules";
-              }}
-            >
-              <ListItemIcon
+          {currentUserMembership === "Premium" ? (
+            <ListItem disablePadding sx={{ display: "block" }}>
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = "/user/schedules";
                 }}
               >
-                <Tooltip title="Schedule">
-                  <CalendarMonthIcon />
-                </Tooltip>
-              </ListItemIcon>
-              <ListItemText
-                primary={"Schedule"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Tooltip title="Schedule">
+                    <CalendarMonthIcon />
+                  </Tooltip>
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Schedule"}
+                  sx={{ opacity: open ? 1 : 0 }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ) : (
+            <div></div>
+          )}
         </List>
         <Divider />
         <List>

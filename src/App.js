@@ -11,12 +11,20 @@ import ListOfUser from "./pages/ListOfUser";
 import ListOfProduct from "./pages/ListOfProduct";
 import Orders from "./pages/OrderLanding";
 import Reservation from "./pages/ReservationLanding";
+import Announcement from "./pages/AnnouncementLanding";
+import UserLog from "./pages/UserLogsLanding";
+import Database from "./pages/DatabaseLanding";
+import ChangePass from "./pages/ChangePassLanding";
 
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminListOfUser from "./pages/admin/ListOfUser";
 import AdminListOfProduct from "./pages/admin/ListOfProduct";
 import AdminOrders from "./pages/admin/OrderLanding";
 import AdminReservation from "./pages/admin/ReservationLanding";
+import AdminAnnouncement from "./pages/admin/AnnouncementLanding";
+import AdminUserLog from "./pages/admin/UserLogsLanding";
+import AdminDatabase from "./pages/admin/DatabaseLanding";
+import AdminChangePass from "./pages/admin/ChangePassLanding";
 
 import MealLanding from "./pages/user/MealLanding";
 import CartLanding from "./pages/user/CartLanding";
@@ -38,6 +46,10 @@ function App() {
         <Route path="/list-of-product" element={<ListOfProduct />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/reservation" element={<Reservation />} />
+        <Route path="/announcement" element={<Announcement />} />
+        <Route path="/user-logs" element={<UserLog />} />
+        <Route path="/database" element={<Database />} />
+        <Route path="/change-password" element={<ChangePass />} />
 
         {/* admin routes */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -45,6 +57,11 @@ function App() {
         <Route path="/admin/list-of-product" element={<AdminListOfProduct />} />
         <Route path="/admin/orders" element={<AdminOrders />} />
         <Route path="/admin/reservation" element={<AdminReservation />} />
+
+        <Route path="/admin/announcement" element={<AdminAnnouncement />} />
+        <Route path="/admin/user-logs" element={<AdminUserLog />} />
+        <Route path="/admin/database" element={<AdminDatabase />} />
+        <Route path="/admin/change-password" element={<AdminChangePass />} />
 
         {/* user routes */}
         <Route path="/user/dashboard" element={<UserDashboard />} />

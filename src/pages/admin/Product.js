@@ -33,7 +33,6 @@ function Product() {
   const theme = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
-  const [addedDate, setAddedDate] = useState("");
   const [isBtnLoading, setIsBtnLoading] = useState(false);
 
   const [price, setPrice] = useState(0);
@@ -92,12 +91,10 @@ function Product() {
         .then((response) => response.json())
         .then((data) => {
           setProducts(data);
+          setFilteredList(data);
           if (data.length === 0) {
             setTableHasNoData(true);
           } else {
-            const formattedAddedDate = formatDate(data[0].added_date);
-            const addedDate = formattedAddedDate;
-            setAddedDate(addedDate);
             setTableHasNoData(false);
           }
           setIsLoading(false);
@@ -283,6 +280,18 @@ function Product() {
         // set the image url
         setUploadFile(result[0].image_url);
       });
+  };
+
+  const [filteredList, setFilteredList] = new useState(products);
+
+  const filterBySearch = (e) => {
+    const results = products.filter((prod) => {
+      if (e.target.value === "") return products;
+      return prod.product_name
+        .toLowerCase()
+        .includes(e.target.value.toLowerCase());
+    });
+    setFilteredList(results);
   };
 
   return (
@@ -492,9 +501,21 @@ function Product() {
             </form>
           </Dialog>
 
-          <Button variant="outlined" onClick={handleOpenModalProduct}>
-            Create new product
-          </Button>
+          <Grid container>
+            <Grid item xs={7}>
+              <Button variant="outlined" onClick={handleOpenModalProduct}>
+                Create new product
+              </Button>
+            </Grid>
+            <Grid item xs={5} display={"flex"} gap={1}>
+              <TextField
+                label="Search product name"
+                onChange={filterBySearch}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+
           <Paper
             sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
             elevation={3}
@@ -526,7 +547,7 @@ function Product() {
                   </TableBody>
                 ) : (
                   <TableBody>
-                    {products
+                    {filteredList
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -542,7 +563,7 @@ function Product() {
                             <TableCell>{prod.product_name}</TableCell>
                             <TableCell>{prod.description}</TableCell>
                             <TableCell>{prod.price}</TableCell>
-                            <TableCell>{addedDate}</TableCell>
+                            <TableCell>{formatDate(prod.added_date)}</TableCell>
                             <TableCell align="center">
                               <Button
                                 variant="text"
@@ -563,7 +584,7 @@ function Product() {
             <TablePagination
               rowsPerPageOptions={[10, 15, 20]}
               component="div"
-              count={products.length}
+              count={filteredList.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

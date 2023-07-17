@@ -129,7 +129,6 @@ function Landing() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log("data:", data);
         setReservationCount(data.length);
         var first_batch = [];
         var second_batch = [];
@@ -176,7 +175,7 @@ function Landing() {
         </div>
       ) : (
         <div>
-          <Typography variant="h5" component="h2">
+          <Typography variant="h5" component="h2" marginLeft={1}>
             Good {greet}, <b>{currentUser}</b>
           </Typography>
           <Box

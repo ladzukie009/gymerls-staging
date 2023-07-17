@@ -18,14 +18,20 @@ import { useNavigate } from "react-router-dom";
 function Settings() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
   const [userProfile, setUserProfile] = useState([]);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowOldPassword = () => setShowOldPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+  const handleMouseDownOldPassword = (event) => {
     event.preventDefault();
   };
 
   const [password, setPassword] = useState("");
+  const [oldPassword, setOldPassword] = useState("");
   const [changePassButtonDisabled, setChangePassButtonDisabled] =
     useState(true);
 
@@ -58,28 +64,41 @@ function Settings() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/update-password", {
-          method: "PATCH",
-          headers: {
-            "Content-type": "application/json",
-          },
-          body: JSON.stringify({
-            password: password,
-            username: localStorage.getItem("username"),
-          }),
-        })
-          .then((res) => res.json())
-          .then((result) => {
-            Swal.fire({
-              title: "Password successfully updated!",
-              icon: "success",
-              showConfirmButton: false,
-              timer: 1500,
-            });
-            localStorage.removeItem("username");
-            localStorage.removeItem("role");
-            navigate("/login");
+        console.log(userProfile[0].password);
+        console.log(oldPassword);
+        console.log(password);
+
+        if (oldPassword !== userProfile[0].password) {
+          Swal.fire({
+            title: "Old password doesn't match",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 1500,
           });
+        } else {
+          fetch("http://localhost:3031/api/update-password", {
+            method: "PATCH",
+            headers: {
+              "Content-type": "application/json",
+            },
+            body: JSON.stringify({
+              password: password,
+              username: localStorage.getItem("username"),
+            }),
+          })
+            .then((res) => res.json())
+            .then((result) => {
+              Swal.fire({
+                title: "Password successfully updated!",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              localStorage.removeItem("username");
+              localStorage.removeItem("role");
+              navigate("/login");
+            });
+        }
       }
     });
   };
@@ -91,18 +110,36 @@ function Settings() {
       </Stack>
       <Stack>
         <Paper elevation={3} sx={{ padding: 5 }}>
-          <Stack>
-            {userProfile.map((user) => {
-              return (
-                <div key={user.id}>
-                  <Typography variant="h6">
-                    Old password: {user.password}
-                  </Typography>
-                </div>
-              );
-            })}
-          </Stack>
           <Grid container>
+            <Grid item xs={12} md={7}>
+              <TextField
+                margin="normal"
+                required
+                name="old_password"
+                fullWidth
+                label="Old password"
+                onChange={(e) => {
+                  setOldPassword(e.target.value);
+                }}
+                type={showOldPassword ? "text" : "password"}
+                id="old_password"
+                autoComplete="old-password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowOldPassword}
+                        onMouseDown={handleMouseDownOldPassword}
+                        edge="end"
+                      >
+                        {showOldPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
             <Grid item xs={12} md={7}>
               <TextField
                 margin="normal"

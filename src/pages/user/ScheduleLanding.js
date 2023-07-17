@@ -32,6 +32,7 @@ import Swal from "sweetalert2";
 import Schedule from "./Schedule";
 import Profile from "./Profile";
 import { useEffect } from "react";
+import { useState } from "react";
 
 const drawerWidth = 240;
 
@@ -114,11 +115,30 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
+    // getCurrentUserInfo(localStorage.getItem("username"));
     const role = localStorage.getItem("role");
     validateRole(role);
-  });
+  }, []);
+
+  const [currentUserMembership, setCurrentUserMembership] = useState("");
+  const getCurrentUserInfo = (user) => {
+    fetch("http://localhost:3031/api/get-user-by-username", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        username: user,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentUserMembership(data[0].membership_type);
+      });
+  };
 
   const validateRole = (role) => {
+    console.log(currentUserMembership);
     if (role !== null && role === "user") {
     } else {
       navigate("/error");

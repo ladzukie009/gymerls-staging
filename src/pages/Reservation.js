@@ -26,7 +26,6 @@ import { useTheme, styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Swal from "sweetalert2";
-import Axios from "axios";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -184,7 +183,7 @@ function Reservation() {
     getReservationByDate(reservationDate);
 
     setOpenCreateModal(true);
-    fetch("http://localhost:3031/api/users")
+    fetch("http://localhost:3031/api/user-membership")
       .then((response) => response.json())
       .then((data) => {
         setListOfUser(data);
@@ -282,6 +281,7 @@ function Reservation() {
         .then((response) => response.json())
         .then((data) => {
           setReservationData(data);
+          setFilteredList(data);
           if (data.length === 0) {
             setTableHasNoData(true);
           } else {
@@ -314,6 +314,7 @@ function Reservation() {
 
   const filteredDataByDate = (date) => {
     setFilterByDate(date);
+    setSearchName("");
     setPage(0);
     setSelectStatus("All");
     var formattedDate = formatDate(date);
@@ -334,6 +335,7 @@ function Reservation() {
         } else {
           setTableHasNoData(false);
           setReservationData(data);
+          setFilteredList(data);
         }
       });
   };
@@ -366,6 +368,7 @@ function Reservation() {
           } else {
             setTableHasNoData(false);
             setReservationData(data);
+            setFilteredList(data);
           }
         });
     }
@@ -487,6 +490,18 @@ function Reservation() {
         setIsBtnLoading(false);
       }
     });
+  };
+
+  const [searchName, setSearchName] = useState("");
+  const [filteredList, setFilteredList] = new useState(reservationData);
+
+  const filterBySearch = (e) => {
+    setSearchName(e.target.value);
+    const results = reservationData.filter((user) => {
+      if (e.target.value === "") return reservationData;
+      return user.username.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setFilteredList(results);
   };
 
   return (
@@ -791,7 +806,7 @@ function Reservation() {
                 alignItems: "center",
               }}
             >
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Grid>
                   <Button
                     variant="outlined"
@@ -803,14 +818,23 @@ function Reservation() {
               </Grid>
               <Grid
                 item
-                xs={6}
+                xs={8}
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   columnGap: 2,
                 }}
               >
-                <Grid item xs={6}>
+                <Grid item xs={4}>
+                  <TextField
+                    fullWidth
+                    value={searchName}
+                    sx={{ margin: 0 }}
+                    onChange={filterBySearch}
+                    label="Search username"
+                  />
+                </Grid>
+                <Grid item xs={4}>
                   <TextField
                     id="standard-select-status"
                     select
@@ -835,7 +859,7 @@ function Reservation() {
                     ))}
                   </TextField>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={4}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                       label="Date"
@@ -881,7 +905,7 @@ function Reservation() {
                   </TableBody>
                 ) : (
                   <TableBody>
-                    {reservationData
+                    {filteredList
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -959,7 +983,7 @@ function Reservation() {
             <TablePagination
               rowsPerPageOptions={[10, 15, 20]}
               component="div"
-              count={reservationData.length}
+              count={filteredList.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

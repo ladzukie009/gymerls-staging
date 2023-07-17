@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,24 +15,27 @@ import {
   ListItemText,
   IconButton,
   Tooltip,
+  Collapse,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import RestaurantIcon from "@mui/icons-material/Restaurant";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
 import LogoutIcon from "@mui/icons-material/Logout";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import StorageIcon from "@mui/icons-material/Storage";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import Swal from "sweetalert2";
-import Profile from "./Profile";
-import Settings from "./Settings";
-import { useEffect, useState } from "react";
 
 const drawerWidth = 240;
 
@@ -103,7 +107,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const navigate = useNavigate();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -114,33 +118,15 @@ export default function MiniDrawer() {
   };
 
   useEffect(() => {
-    getCurrentUserInfo(localStorage.getItem("username"));
     const role = localStorage.getItem("role");
     validateRole(role);
   });
 
   const validateRole = (role) => {
-    if (role !== null && role === "user") {
+    if (role !== null && role === "admin") {
     } else {
       navigate("/error");
     }
-  };
-
-  const [currentUserMembership, setCurrentUserMembership] = useState("");
-  const getCurrentUserInfo = (user) => {
-    fetch("http://localhost:3031/api/get-user-by-username", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        username: user,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCurrentUserMembership(data[0].membership_type);
-      });
   };
 
   const logout = () => {
@@ -153,11 +139,15 @@ export default function MiniDrawer() {
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem("username");
-        localStorage.removeItem("role");
+        localStorage.clear();
         navigate("/login");
       }
     });
+  };
+
+  const [openSettings, setOpenSettings] = useState(true);
+  const handleClickOpenSettings = () => {
+    setOpenSettings(!openSettings);
   };
 
   return (
@@ -180,9 +170,6 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             GYM Management System
           </Typography>
-          <div>
-            <Profile />
-          </div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -206,7 +193,7 @@ export default function MiniDrawer() {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = "/user/dashboard";
+                window.location.href = "/admin/dashboard";
               }}
             >
               <ListItemIcon
@@ -234,7 +221,7 @@ export default function MiniDrawer() {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = "/user/meal-plan";
+                window.location.href = "/admin/list-of-user";
               }}
             >
               <ListItemIcon
@@ -244,14 +231,13 @@ export default function MiniDrawer() {
                   justifyContent: "center",
                 }}
               >
-                <Tooltip title="Meal plan">
-                  <RestaurantIcon />
+                <Tooltip title="List of user">
+                  <RecentActorsIcon />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText
-                primary={"Meal Plan"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
+              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <Typography>List of user</Typography>
+              </ListItemText>
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
@@ -263,7 +249,7 @@ export default function MiniDrawer() {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = "/user/cart";
+                window.location.href = "/admin/list-of-product";
               }}
             >
               <ListItemIcon
@@ -273,14 +259,13 @@ export default function MiniDrawer() {
                   justifyContent: "center",
                 }}
               >
-                <Tooltip title="My Cart">
-                  <ShoppingCartIcon />
+                <Tooltip title="List of product">
+                  <Inventory2Icon />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText
-                primary={"My Cart"}
-                sx={{ opacity: open ? 1 : 0 }}
-              />
+              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <Typography>List of product</Typography>
+              </ListItemText>
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
@@ -292,7 +277,7 @@ export default function MiniDrawer() {
               }}
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = "/user/order";
+                window.location.href = "/admin/orders";
               }}
             >
               <ListItemIcon
@@ -303,45 +288,43 @@ export default function MiniDrawer() {
                 }}
               >
                 <Tooltip title="Orders">
-                  <ShoppingBagIcon />
+                  <ReceiptIcon />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText primary={"Orders"} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <Typography>Orders</Typography>
+              </ListItemText>
             </ListItemButton>
           </ListItem>
-          {currentUserMembership === "Premium" ? (
-            <ListItem disablePadding sx={{ display: "block" }}>
-              <ListItemButton
+
+          <ListItem disablePadding sx={{ display: "block" }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? "initial" : "center",
+                px: 2.5,
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.href = "/admin/reservation";
+              }}
+            >
+              <ListItemIcon
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? "initial" : "center",
-                  px: 2.5,
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = "/user/schedules";
+                  minWidth: 0,
+                  mr: open ? 3 : "auto",
+                  justifyContent: "center",
                 }}
               >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : "auto",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Tooltip title="Schedule">
-                    <CalendarMonthIcon />
-                  </Tooltip>
-                </ListItemIcon>
-                <ListItemText
-                  primary={"Schedule"}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ) : (
-            <div></div>
-          )}
+                <Tooltip title="Reservation">
+                  <AccessTimeFilledIcon />
+                </Tooltip>
+              </ListItemIcon>
+              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
+                <Typography>Reservation</Typography>
+              </ListItemText>
+            </ListItemButton>
+          </ListItem>
         </List>
         <Divider />
         <List>
@@ -352,6 +335,7 @@ export default function MiniDrawer() {
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={() => handleClickOpenSettings()}
             >
               <ListItemIcon
                 sx={{
@@ -360,14 +344,84 @@ export default function MiniDrawer() {
                   justifyContent: "center",
                 }}
               >
-                <Tooltip title="Settings">
+                <Tooltip title="Configuration">
                   <SettingsIcon />
                 </Tooltip>
               </ListItemIcon>
-              <ListItemText sx={{ opacity: open ? 1 : 0 }}>
-                <Typography sx={{ fontWeight: "bold" }}>Settings</Typography>
-              </ListItemText>
+              <ListItemText
+                primary={"Configuration"}
+                sx={{ opacity: open ? 1 : 0 }}
+              />
+              {openSettings ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
+            <Collapse in={openSettings} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/announcement";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="Announcements">
+                      <CampaignIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography>Announcements</Typography>
+                  </ListItemText>
+                </ListItemButton>
+              </List>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/user-logs";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="User logs">
+                      <ManageAccountsIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography>User logs</Typography>
+                  </ListItemText>
+                </ListItemButton>
+              </List>
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <Tooltip title="Database">
+                      <StorageIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText>
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      Database
+                    </Typography>
+                  </ListItemText>
+                </ListItemButton>
+              </List>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/change-password";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="Change password">
+                      <VpnKeyIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText primary="Change password" />
+                </ListItemButton>
+              </List>
+            </Collapse>
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
@@ -394,9 +448,8 @@ export default function MiniDrawer() {
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1 }}>
         <DrawerHeader />
-        <Settings />
       </Box>
     </Box>
   );

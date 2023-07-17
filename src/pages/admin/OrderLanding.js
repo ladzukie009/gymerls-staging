@@ -15,6 +15,7 @@ import {
   ListItemText,
   IconButton,
   Tooltip,
+  Collapse,
 } from "@mui/material";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
@@ -28,6 +29,12 @@ import Inventory2Icon from "@mui/icons-material/Inventory2";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import StorageIcon from "@mui/icons-material/Storage";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import Swal from "sweetalert2";
 import Order from "./Order";
 
@@ -137,6 +144,11 @@ export default function MiniDrawer() {
         navigate("/login");
       }
     });
+  };
+
+  const [openSettings, setOpenSettings] = useState(false);
+  const handleClickOpenSettings = () => {
+    setOpenSettings(!openSettings);
   };
 
   return (
@@ -313,13 +325,14 @@ export default function MiniDrawer() {
         </List>
         <Divider />
         <List>
-          <ListItem disablePadding sx={{ display: "block", opacity: 0.5 }}>
+          <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton
               sx={{
                 minHeight: 48,
                 justifyContent: open ? "initial" : "center",
                 px: 2.5,
               }}
+              onClick={() => handleClickOpenSettings()}
             >
               <ListItemIcon
                 sx={{
@@ -328,15 +341,82 @@ export default function MiniDrawer() {
                   justifyContent: "center",
                 }}
               >
-                <Tooltip title="Settings">
+                <Tooltip title="Configuration">
                   <SettingsIcon />
                 </Tooltip>
               </ListItemIcon>
               <ListItemText
-                primary={"Settings"}
+                primary={"Configuration"}
                 sx={{ opacity: open ? 1 : 0 }}
               />
+              {openSettings ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
+            <Collapse in={openSettings} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/announcement";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="Announcements">
+                      <CampaignIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText primary="Announcements" />
+                </ListItemButton>
+              </List>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/user-logs";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="User logs">
+                      <ManageAccountsIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText primary="User logs" />
+                </ListItemButton>
+              </List>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/database";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="Database">
+                      <StorageIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText primary="Database" />
+                </ListItemButton>
+              </List>
+              <List component="div" disablePadding>
+                <ListItemButton
+                  sx={{ pl: 4 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.location.href = "/admin/change-password";
+                  }}
+                >
+                  <ListItemIcon>
+                    <Tooltip title="Change password">
+                      <VpnKeyIcon />
+                    </Tooltip>
+                  </ListItemIcon>
+                  <ListItemText primary="Change password" />
+                </ListItemButton>
+              </List>
+            </Collapse>
           </ListItem>
           <ListItem disablePadding sx={{ display: "block" }}>
             <ListItemButton

@@ -8,20 +8,58 @@ import {
   CircularProgress,
   Backdrop,
   Divider,
+  Box,
 } from "@mui/material";
 import { Image } from "mui-image";
+import { styled } from "@mui/material/styles";
+import LinearProgress, {
+  linearProgressClasses,
+} from "@mui/material/LinearProgress";
+
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CampaignIcon from "@mui/icons-material/Campaign";
+
+const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+  height: 10,
+  borderRadius: 5,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor:
+      theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 5,
+    backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+  },
+}));
 
 function Landing() {
   const [greet, setGreet] = useState("");
   const [dateNow, setDateNow] = useState(new Date());
-  const [currentUser, getCurrentUser] = useState("");
+  const [currentUser, setCurrentUser] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  // SCHEDULE
+  // calendar - schedules
+  const [firstBatch, setFirstBatch] = useState([]);
+  const [secondBatch, setSecondBatch] = useState([]);
+  const [thirdBatch, setThirdBatch] = useState([]);
+  const [fourthBatch, setFourthBatch] = useState([]);
+  const [fifthBatch, setFifthBatch] = useState([]);
+  const [lastBatch, setLastBatch] = useState([]);
 
+  // SCHEDULE
   const [todaySchedules, setTodaySchedules] = useState([]);
 
   const [hasSchedule, setHasSchedule] = useState(false);
+
+  // MEAL PLANNING
+  const [hasMealPlan, setHasMealPlan] = useState(true);
+  const [meal, setMeal] = useState([]);
+
+  const [breakfast, setBreakfast] = useState("");
+  const [lunch, setLunch] = useState("");
+  const [dinner, setDinner] = useState("");
+
+  const [mealDay, setMealDay] = useState("");
 
   const formatDate = (date) => {
     var dateToFormat = new Date(date);
@@ -55,11 +93,89 @@ function Landing() {
       });
   };
 
+  const [currentUserMembership, setCurrentUserMembership] = useState("");
+  const getCurrentUserInfo = (user) => {
+    fetch("http://localhost:3031/api/get-user-by-username", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        username: user,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setCurrentUserMembership(data[0].membership_type);
+      });
+  };
+
+  const getMealPlan = (user) => {
+    fetch("http://localhost:3031/api/meal-plan", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        username: user,
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setMeal(result);
+        if (result.length !== 0) {
+          setHasMealPlan(true);
+        } else {
+          setHasMealPlan(false);
+        }
+        for (let meal of result) {
+          if (mealDay === "Sunday") {
+            setBreakfast(meal.sun_bf_meal);
+            setLunch(meal.sun_lunch_meal);
+            setDinner(meal.sun_dinner_meal);
+          } else if (mealDay === "Monday") {
+            setBreakfast(meal.mon_bf_meal);
+            setLunch(meal.mon_lunch_meal);
+            setDinner(meal.mon_dinner_meal);
+          } else if (mealDay === "Tuesday") {
+            setBreakfast(meal.tue_bf_meal);
+            setLunch(meal.tue_lunch_meal);
+            setDinner(meal.tue_dinner_meal);
+          } else if (mealDay === "Wednesday") {
+            setBreakfast(meal.wed_bf_meal);
+            setLunch(meal.wed_lunch_meal);
+            setDinner(meal.wed_dinner_meal);
+          } else if (mealDay === "Thursday") {
+            setBreakfast(meal.thurs_bf_meal);
+            setLunch(meal.thurs_lunch_meal);
+            setDinner(meal.thurs_dinner_meal);
+          } else if (mealDay === "Friday") {
+            setBreakfast(meal.fri_bf_meal);
+            setLunch(meal.fri_lunch_meal);
+            setDinner(meal.fri_dinner_meal);
+          } else {
+            setBreakfast(meal.sat_bf_meal);
+            setLunch(meal.sat_lunch_meal);
+            setDinner(meal.sat_dinner_meal);
+          }
+        }
+      });
+  };
+
   useEffect(() => {
+    var dayOfWeek = dateNow.toLocaleDateString("en-us", {
+      weekday: "long",
+    });
+    setMealDay(dayOfWeek);
     getTime();
+    var formattedDate = formatDate(new Date());
+    getReservationByDate(formattedDate);
+
     getAllSchedule(localStorage.getItem("username"));
+    getMealPlan(localStorage.getItem("username"));
+    getCurrentUserInfo(localStorage.getItem("username"));
     setDateNow(new Date());
-    getCurrentUser(localStorage.getItem("username"));
+    setCurrentUser(localStorage.getItem("username"));
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 3000);
@@ -77,6 +193,61 @@ function Landing() {
   setInterval(function () {
     getTime();
   }, 300000);
+
+  const getReservationByDate = (date) => {
+    var formattedDate = formatDate(date);
+    setFirstBatch([]);
+    setSecondBatch([]);
+    setThirdBatch([]);
+    setFourthBatch([]);
+    setFifthBatch([]);
+    setLastBatch([]);
+
+    fetch(
+      "http://localhost:3031/api/get-reservation-by-date-and-status-is-confirmed",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          reservation_date: formattedDate,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        var first_batch = [];
+        var second_batch = [];
+        var third_batch = [];
+        var fourth_batch = [];
+        var fifth_batch = [];
+        var last_batch = [];
+
+        for (let item of data) {
+          if (item.time_slot === "7-9AM") {
+            first_batch.push(item);
+          } else if (item.time_slot === "9-11AM") {
+            second_batch.push(item);
+          } else if (item.time_slot === "1-3PM") {
+            third_batch.push(item);
+          } else if (item.time_slot === "3-5PM") {
+            fourth_batch.push(item);
+          } else if (item.time_slot === "5-7PM") {
+            fifth_batch.push(item);
+          } else {
+            last_batch.push(item);
+          }
+        }
+
+        setFirstBatch(first_batch);
+        setSecondBatch(second_batch);
+        setThirdBatch(third_batch);
+        setFourthBatch(fourth_batch);
+        setFifthBatch(fifth_batch);
+        setLastBatch(last_batch);
+      });
+  };
 
   return (
     <>
@@ -150,83 +321,253 @@ function Landing() {
             </Paper>
           </Stack>
 
+          {currentUserMembership !== "Premium" ? (
+            <Stack></Stack>
+          ) : (
+            <Stack>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={7}>
+                  <Typography variant="h4">Today schedule</Typography>
+                  <Stack>
+                    {hasSchedule ? (
+                      <Grid container>
+                        {todaySchedules.map((sched) => {
+                          return (
+                            <Grid item key={sched.id} xs={3} m={1}>
+                              <Paper
+                                sx={
+                                  sched.status === "Pending"
+                                    ? {
+                                        backgroundColor: "#ed6c02",
+                                        color: "#fff",
+                                        p: 1,
+                                        height: 150,
+                                      }
+                                    : sched.status === "Cancelled"
+                                    ? {
+                                        backgroundColor: "#d32f2f",
+                                        color: "#fff",
+                                        p: 1,
+                                        height: 150,
+                                      }
+                                    : sched.status === "Declined"
+                                    ? {
+                                        backgroundColor: "#9c27b0",
+                                        color: "#fff",
+                                        p: 1,
+                                        height: 150,
+                                      }
+                                    : sched.status === "Completed"
+                                    ? {
+                                        backgroundColor: "#1976d2",
+                                        color: "#fff",
+                                        p: 1,
+                                        height: 150,
+                                      }
+                                    : {
+                                        backgroundColor: "#2e7d32",
+                                        color: "#fff",
+                                        p: 1,
+                                        height: 150,
+                                      }
+                                }
+                              >
+                                <Typography>{sched.time_slot}</Typography>
+                                <Divider color="#fff" />
+                                <Typography>{sched.status}</Typography>
+                                <Divider
+                                  color="#fff"
+                                  sx={{ marginBottom: 1 }}
+                                />
+                                <Typography>{sched.notes}</Typography>
+                              </Paper>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
+                    ) : (
+                      <Grid container marginLeft={2}>
+                        <Typography>No schedule today</Typography>
+                      </Grid>
+                    )}
+                  </Stack>
+                </Grid>
+                <Grid item xs={12} md={5} sx={{ padding: 1 }}>
+                  <Paper elevation={3} sx={{ padding: 4 }}>
+                    <Grid
+                      sx={{
+                        display: "flex",
+                        columnGap: 1,
+                        alignItems: "center",
+                      }}
+                    >
+                      <AccessTimeIcon sx={{ fontSize: "2rem" }} />
+                      <Typography variant="h4">Time slot</Typography>
+                      <Typography variant="h5">(Today)</Typography>
+                    </Grid>
+
+                    <Grid container>
+                      <Typography variant="h6">7 - 9 AM</Typography>
+                      <Box sx={{ width: "100%" }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={firstBatch.length * 10}
+                        />
+                        <Typography sx={{ color: "gray", fontSize: 12 }}>
+                          {10 - firstBatch.length + " slot(s) remaining"}
+                        </Typography>
+                      </Box>
+                    </Grid>
+
+                    <Grid container>
+                      <Typography variant="h6">9 - 11 AM</Typography>
+                      <Box sx={{ width: "100%" }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={secondBatch.length * 10}
+                        />
+                        <Typography sx={{ color: "gray", fontSize: 12 }}>
+                          {10 - secondBatch.length + " slot(s) remaining"}
+                        </Typography>
+                      </Box>
+                    </Grid>
+
+                    <Grid container>
+                      <Typography variant="h6">1 - 3 PM</Typography>
+                      <Box sx={{ width: "100%" }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={thirdBatch.length * 10}
+                        />
+                        <Typography sx={{ color: "gray", fontSize: 12 }}>
+                          {10 - thirdBatch.length + " slot(s) remaining"}
+                        </Typography>
+                      </Box>
+                    </Grid>
+
+                    <Grid container>
+                      <Typography variant="h6">3 - 5 PM</Typography>
+                      <Box sx={{ width: "100%" }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={fourthBatch.length * 10}
+                        />
+                        <Typography sx={{ color: "gray", fontSize: 12 }}>
+                          {10 - fourthBatch.length + " slot(s) remaining"}
+                        </Typography>
+                      </Box>
+                    </Grid>
+
+                    <Grid container>
+                      <Typography variant="h6">5 - 7 PM</Typography>
+                      <Box sx={{ width: "100%" }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={fifthBatch.length * 10}
+                        />
+                        <Typography sx={{ color: "gray", fontSize: 12 }}>
+                          {10 - fifthBatch.length + " slot(s) remaining"}
+                        </Typography>
+                      </Box>
+                    </Grid>
+
+                    <Grid container>
+                      <Typography variant="h6">7 - 9 PM</Typography>
+                      <Box sx={{ width: "100%" }}>
+                        <BorderLinearProgress
+                          variant="determinate"
+                          value={lastBatch.length * 10}
+                        />
+                        <Typography sx={{ color: "gray", fontSize: 12 }}>
+                          {10 - lastBatch.length + " slot(s) remaining"}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Stack>
+          )}
+
           <Stack>
             <Grid container spacing={2}>
               <Grid item xs={12} md={7}>
-                <Typography variant="h4">My schedule today</Typography>
                 <Stack>
-                  {hasSchedule ? (
+                  {hasMealPlan ? (
                     <Grid container>
-                      {todaySchedules.map((sched) => {
-                        return (
-                          <Grid item key={sched.id} xs={3} m={1}>
-                            <Paper
-                              sx={
-                                sched.status === "Pending"
-                                  ? {
-                                      backgroundColor: "#ed6c02",
-                                      color: "#fff",
-                                      p: 1,
-                                      height: 150,
-                                    }
-                                  : sched.status === "Cancelled"
-                                  ? {
-                                      backgroundColor: "#d32f2f",
-                                      color: "#fff",
-                                      p: 1,
-                                      height: 150,
-                                    }
-                                  : sched.status === "Declined"
-                                  ? {
-                                      backgroundColor: "#9c27b0",
-                                      color: "#fff",
-                                      p: 1,
-                                      height: 150,
-                                    }
-                                  : sched.status === "Completed"
-                                  ? {
-                                      backgroundColor: "#1976d2",
-                                      color: "#fff",
-                                      p: 1,
-                                      height: 150,
-                                    }
-                                  : {
-                                      backgroundColor: "#2e7d32",
-                                      color: "#fff",
-                                      p: 1,
-                                      height: 150,
-                                    }
-                              }
-                            >
-                              <Typography>{sched.time_slot}</Typography>
-                              <Divider color="#fff" />
-                              <Typography>{sched.status}</Typography>
-                              <Divider color="#fff" sx={{ marginBottom: 1 }} />
-                              <Typography>{sched.notes}</Typography>
-                            </Paper>
-                          </Grid>
-                        );
-                      })}
+                      <Paper
+                        elevation={3}
+                        sx={{ width: "100%", p: 3, height: "100%" }}
+                      >
+                        <Typography variant="h4">Today's meal</Typography>
+
+                        <Stack>
+                          <Typography variant="h5">Breakfast</Typography>
+                          <Typography>{breakfast}</Typography>
+                        </Stack>
+                        <Stack>
+                          <Typography variant="h5">Lunch</Typography>
+                          <Typography>{lunch}</Typography>
+                        </Stack>
+                        <Stack>
+                          <Typography variant="h5">Dinner</Typography>
+                          <Typography>{dinner}</Typography>
+                        </Stack>
+                      </Paper>
                     </Grid>
                   ) : (
-                    <Grid container>
-                      <Typography>No schedule today</Typography>
+                    <Grid container marginLeft={2}>
+                      <Grid item xs={12}>
+                        <Typography variant="h4">Today's meal</Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography>
+                          No meal planning yet, please contact your coach.
+                        </Typography>
+                      </Grid>
                     </Grid>
                   )}
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={5}>
-                <Typography variant="h4">Announcement</Typography>
-                <Stack m={1}>
-                  <Paper elevation={3}>
-                    <Typography variant="h5">sample</Typography>
-                  </Paper>
-                </Stack>
-                <Stack m={1}>
-                  <Paper elevation={3}>
-                    <Typography variant="h5">sample</Typography>
-                  </Paper>
-                </Stack>
+              <Grid item xs={12} md={5} pr={1}>
+                <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
+                  {/* <Grid sx={{ width: "20rem", height: "10rem" }}> */}
+                  <Grid sx={{ display: "flex" }}>
+                    <CampaignIcon sx={{ fontSize: "2.5rem", marginRight: 1 }} />
+                    <Typography variant="h4">Announcement</Typography>
+                    {/* <Image
+                      src="../images/important.png"
+                      alt="announcement.png"
+                    /> */}
+                  </Grid>
+                  <Stack m={1}>
+                    <Paper elevation={3}>
+                      <Typography variant="h5">sample</Typography>
+                    </Paper>
+                  </Stack>
+                  <Stack m={1}>
+                    <Paper elevation={3}>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                      <Typography variant="h5">sample</Typography>
+                    </Paper>
+                  </Stack>
+                </Paper>
               </Grid>
             </Grid>
           </Stack>

@@ -19,6 +19,7 @@ import {
   DialogActions,
   TextField,
   MenuItem,
+  Grid,
 } from "@mui/material";
 import { useTheme, styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
@@ -81,6 +82,7 @@ function Product() {
         .then((response) => response.json())
         .then((data) => {
           setTransaction(data);
+          setFilteredList(data);
           if (data.length === 0) {
             setTableHasNoData(true);
           } else {
@@ -92,6 +94,24 @@ function Product() {
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  const statusFilter = [
+    {
+      name: "All",
+      value: "All",
+      color: "",
+    },
+    {
+      name: "Pending",
+      value: "Pending",
+      color: "#ed6c02",
+    },
+    {
+      name: "Completed",
+      value: "Completed",
+      color: "#1976d2",
+    },
+  ];
 
   const formatDate = (date) => {
     var dateToFormat = new Date(date);
@@ -171,6 +191,26 @@ function Product() {
     });
   };
 
+  const [filteredList, setFilteredList] = new useState(transaction);
+
+  const filterBySearch = (e) => {
+    const results = transaction.filter((trans) => {
+      if (e.target.value === "") return transaction;
+      return trans.fullname
+        .toLowerCase()
+        .includes(e.target.value.toLowerCase());
+    });
+    setFilteredList(results);
+  };
+
+  const filterByStatus = (e) => {
+    const results = transaction.filter((trans) => {
+      if (e.target.value === "All") return transaction;
+      return trans.status.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    setFilteredList(results);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -246,6 +286,41 @@ function Product() {
             </DialogActions>
           </Dialog>
 
+          <Grid container>
+            <Grid item md={5}></Grid>
+            <Grid
+              item
+              md={7}
+              sx={{ display: "flex", alignItems: "center", columnGap: "1rem" }}
+            >
+              <TextField
+                label="Search name"
+                onChange={filterBySearch}
+                fullWidth
+              />
+              <TextField
+                id="standard-select-status"
+                select
+                fullWidth
+                margin="normal"
+                label="Status"
+                sx={{ marginBottom: "1rem" }}
+                onChange={filterByStatus}
+                defaultValue={"All"}
+              >
+                {statusFilter.map((option) => (
+                  <MenuItem
+                    key={option.name}
+                    value={option.value}
+                    sx={{ color: option.color }}
+                  >
+                    {option.value}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
+
           <Paper
             sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
             elevation={3}
@@ -277,7 +352,7 @@ function Product() {
                   </TableBody>
                 ) : (
                   <TableBody>
-                    {transaction
+                    {filteredList
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
@@ -301,9 +376,17 @@ function Product() {
                             </TableCell>
                             <TableCell>
                               {trans.status === "Pending" ? (
-                                <Chip label="Pending" color="warning" />
+                                <Chip
+                                  label="Pending"
+                                  color="warning"
+                                  sx={{ width: "6rem" }}
+                                />
                               ) : (
-                                <Chip label="Completed" color="success" />
+                                <Chip
+                                  label="Completed"
+                                  color="success"
+                                  sx={{ width: "6rem" }}
+                                />
                               )}
                             </TableCell>
                             <TableCell>
@@ -324,7 +407,7 @@ function Product() {
             <TablePagination
               rowsPerPageOptions={[10, 15, 20]}
               component="div"
-              count={transaction.length}
+              count={filteredList.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
