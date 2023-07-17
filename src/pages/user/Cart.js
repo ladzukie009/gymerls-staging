@@ -412,7 +412,21 @@ function Cart() {
               </Stack>
             </Dialog>
           </div>
-          <Typography variant="h4">My Cart</Typography>
+          <Grid container>
+            <Grid item xs={6}>
+              <Typography variant="h4">My Cart</Typography>
+            </Grid>
+            <Grid item xs={6} textAlign={"right"}>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = "/store";
+                }}
+              >
+                ADD MORE ITEM
+              </Button>
+            </Grid>
+          </Grid>
           <Stack>
             <Grid container>
               <Grid item xs={12} md={12}>

@@ -110,7 +110,7 @@ function Landing() {
       });
   };
 
-  const getMealPlan = (user) => {
+  const getMealPlan = (user, day) => {
     fetch("http://localhost:3031/api/meal-plan", {
       method: "POST",
       headers: {
@@ -129,27 +129,27 @@ function Landing() {
           setHasMealPlan(false);
         }
         for (let meal of result) {
-          if (mealDay === "Sunday") {
+          if (day === "Sunday") {
             setBreakfast(meal.sun_bf_meal);
             setLunch(meal.sun_lunch_meal);
             setDinner(meal.sun_dinner_meal);
-          } else if (mealDay === "Monday") {
+          } else if (day === "Monday") {
             setBreakfast(meal.mon_bf_meal);
             setLunch(meal.mon_lunch_meal);
             setDinner(meal.mon_dinner_meal);
-          } else if (mealDay === "Tuesday") {
+          } else if (day === "Tuesday") {
             setBreakfast(meal.tue_bf_meal);
             setLunch(meal.tue_lunch_meal);
             setDinner(meal.tue_dinner_meal);
-          } else if (mealDay === "Wednesday") {
+          } else if (day === "Wednesday") {
             setBreakfast(meal.wed_bf_meal);
             setLunch(meal.wed_lunch_meal);
             setDinner(meal.wed_dinner_meal);
-          } else if (mealDay === "Thursday") {
+          } else if (day === "Thursday") {
             setBreakfast(meal.thurs_bf_meal);
             setLunch(meal.thurs_lunch_meal);
             setDinner(meal.thurs_dinner_meal);
-          } else if (mealDay === "Friday") {
+          } else if (day === "Friday") {
             setBreakfast(meal.fri_bf_meal);
             setLunch(meal.fri_lunch_meal);
             setDinner(meal.fri_dinner_meal);
@@ -172,7 +172,7 @@ function Landing() {
     getReservationByDate(formattedDate);
 
     getAllSchedule(localStorage.getItem("username"));
-    getMealPlan(localStorage.getItem("username"));
+    getMealPlan(localStorage.getItem("username"), dayOfWeek);
     getCurrentUserInfo(localStorage.getItem("username"));
     setDateNow(new Date());
     setCurrentUser(localStorage.getItem("username"));

@@ -120,25 +120,24 @@ export default function MiniDrawer() {
     validateRole(role);
   }, []);
 
-  const [currentUserMembership, setCurrentUserMembership] = useState("");
-  const getCurrentUserInfo = (user) => {
-    fetch("http://localhost:3031/api/get-user-by-username", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        username: user,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCurrentUserMembership(data[0].membership_type);
-      });
-  };
+  // const [currentUserMembership, setCurrentUserMembership] = useState("");
+  // const getCurrentUserInfo = (user) => {
+  //   fetch("http://localhost:3031/api/get-user-by-username", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       username: user,
+  //     }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setCurrentUserMembership(data[0].membership_type);
+  //     });
+  // };
 
   const validateRole = (role) => {
-    console.log(currentUserMembership);
     if (role !== null && role === "user") {
     } else {
       navigate("/error");

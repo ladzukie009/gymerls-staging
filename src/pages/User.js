@@ -23,6 +23,7 @@ import {
   CircularProgress,
   Backdrop,
   Switch,
+  IconButton,
 } from "@mui/material";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme, styled } from "@mui/material/styles";
@@ -31,6 +32,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import dayjs from "dayjs";
 
 import Swal from "sweetalert2";
@@ -751,6 +753,97 @@ function User() {
       return user.username.toLowerCase().includes(e.target.value.toLowerCase());
     });
     setFilteredList(results);
+  };
+
+  const deleteUser = (username) => {
+    Swal.fire({
+      icon: "warning",
+      title: "Are you sure you want to delete this account?",
+      text: "You won't be able to revert this!",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      allowOutsideClick: false,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // DELETE IN USERS TABLE
+        fetch("http://localhost:3031/api/delete-user", {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        }).then((res) => res.json());
+
+        // DELETE IN USER_PROFILE TABLE
+        fetch("http://localhost:3031/api/delete-user-profile", {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        }).then((res) => res.json());
+
+        // DELETE IN MEAL_PLAN TABLE
+        fetch("http://localhost:3031/api/delete-user-meal-plan", {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        }).then((res) => res.json());
+
+        // DELETE IN TRANSACTION TABLE
+        fetch("http://localhost:3031/api/delete-user-transaction", {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        }).then((res) => res.json());
+
+        // DELETE IN RESERVATION TABLE
+        fetch("http://localhost:3031/api/delete-user-reservation", {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        }).then((res) => res.json());
+
+        // DELETE IN CART TABLE
+        fetch("http://localhost:3031/api/delete-user-cart", {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+          }),
+        }).then((res) => res.json());
+
+        Swal.fire({
+          title: "User successfully deleted!",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(function () {
+          window.location.reload(false);
+        });
+      } else {
+        setIsBtnLoading(false);
+      }
+    });
   };
 
   return (
@@ -2264,6 +2357,12 @@ function User() {
                             >
                               Update Password
                             </Button>
+                            <IconButton
+                              aria-label="cart"
+                              onClick={() => deleteUser(user.username)}
+                            >
+                              <DeleteForeverIcon color="error" />
+                            </IconButton>
                           </TableCell>
                         </StyledTableRow>
                       );
