@@ -43,10 +43,35 @@ export default function SignInSide() {
     event.preventDefault();
   };
 
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (username, event) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          event_info: `Logon - ${event}`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setIsLoading(true);
     const data = new FormData(event.currentTarget);
+    const currentUsername = data.get("username");
 
     fetch("http://localhost:3031/api/get-user", {
       method: "POST",
@@ -66,6 +91,7 @@ export default function SignInSide() {
             icon: "error",
             text: "Check your login credentials!",
           }).then(function () {
+            userLog(currentUsername, "failed");
             setIsLoading(false);
           });
         } else {
@@ -76,6 +102,7 @@ export default function SignInSide() {
           }).then(function () {
             localStorage.setItem("username", data[0].username);
             localStorage.setItem("role", data[0].role);
+            userLog(data[0].username, "success");
             if (data[0].role === "super_admin") {
               navigate("/dashboard");
             } else if (data[0].role === "admin") {

@@ -378,6 +378,9 @@ function Reservation() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    const user_name = data.get("user_name");
+    const status = data.get("reservation-status");
+
     Swal.fire({
       icon: "info",
       title: "Are you sure you want to proceed?",
@@ -405,6 +408,15 @@ function Reservation() {
         })
           .then((res) => res.json())
           .then((result) => {});
+
+        userLog(
+          localStorage.getItem("username"),
+          "Create",
+          "new reservation for",
+          user_name,
+          `with status = "${status}"`
+        );
+
         Swal.fire({
           title: "Reservation successfully created!",
           icon: "success",
@@ -475,6 +487,14 @@ function Reservation() {
         })
           .then((res) => res.json())
           .then((result) => {
+            userLog(
+              localStorage.getItem("username"),
+              "Update",
+              "reservation for",
+              updateUsername,
+              `with status = "${updateResStatus}"`
+            );
+
             Swal.fire({
               title: "Reservation successfully updated!",
               icon: "success",
@@ -502,6 +522,30 @@ function Reservation() {
       return user.username.toLowerCase().includes(e.target.value.toLowerCase());
     });
     setFilteredList(results);
+  };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event, user, status) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event} "${user}" ${status}`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
+    });
   };
 
   return (

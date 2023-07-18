@@ -156,6 +156,7 @@ function Product() {
     setIsBtnLoading(true);
     const data = new FormData(e.currentTarget);
     const addedDate = formatDate(new Date());
+    const product_name = data.get("product_name");
     uploadImageToCloud(function (callback) {
       fetch("http://localhost:3031/api/create-product", {
         method: "POST",
@@ -173,6 +174,13 @@ function Product() {
       })
         .then((res) => res.json())
         .then((result) => {
+          userLog(
+            localStorage.getItem("username"),
+            "Create",
+            "new product",
+            product_name
+          );
+
           Swal.fire({
             title: "Product successfully created!",
             icon: "success",
@@ -192,6 +200,7 @@ function Product() {
     e.preventDefault();
     setIsBtnLoading(true);
     const data = new FormData(e.currentTarget);
+    const product_name = data.get("update_prod_name");
 
     uploadImageToCloud(function (callback) {
       Swal.fire({
@@ -219,6 +228,12 @@ function Product() {
           })
             .then((res) => res.json())
             .then((result) => {
+              userLog(
+                localStorage.getItem("username"),
+                "Update",
+                "product",
+                product_name
+              );
               Swal.fire({
                 title: "Product successfully updated!",
                 icon: "success",
@@ -290,6 +305,30 @@ function Product() {
         .includes(e.target.value.toLowerCase());
     });
     setFilteredList(results);
+  };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event, product) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event} "${product}"`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
+    });
   };
 
   return (

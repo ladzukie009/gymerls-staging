@@ -238,6 +238,12 @@ function User() {
           .then((res) => res.json())
           .then((result) => {
             createUserProfile();
+            userLog(
+              localStorage.getItem("username"),
+              "Create",
+              "new user",
+              username
+            );
           });
         Swal.fire({
           title: "User successfully created!",
@@ -439,6 +445,12 @@ function User() {
         })
           .then((res) => res.json())
           .then((result) => {
+            userLog(
+              localStorage.getItem("username"),
+              "Update",
+              "user",
+              username
+            );
             Swal.fire({
               title: "User successfully updated!",
               icon: "success",
@@ -576,6 +588,13 @@ function User() {
     })
       .then((res) => res.json())
       .then((result) => {
+        userLog(
+          localStorage.getItem("username"),
+          "Create",
+          "meal plan for",
+          mealPlanUser
+        );
+
         Swal.fire({
           title: "Meal plan successfully created!",
           icon: "success",
@@ -637,6 +656,12 @@ function User() {
         })
           .then((res) => res.json())
           .then((result) => {
+            userLog(
+              localStorage.getItem("username"),
+              "Update",
+              "meal plan for",
+              mealPlanUser
+            );
             Swal.fire({
               title: "Meal plan successfully updated!",
               icon: "success",
@@ -687,6 +712,13 @@ function User() {
         })
           .then((res) => res.json())
           .then((result) => {
+            userLog(
+              localStorage.getItem("username"),
+              "Update",
+              "password of user",
+              selectedUser
+            );
+
             Swal.fire({
               title: "Password successfully updated!",
               icon: "success",
@@ -717,6 +749,8 @@ function User() {
       if (result.isConfirmed) {
         setIsBtnLoading(true);
         handleUserStatus(status, username);
+      } else {
+        window.location.reload(false);
       }
     });
   };
@@ -734,6 +768,13 @@ function User() {
     })
       .then((res) => res.json())
       .then((data) => {
+        userLog(
+          localStorage.getItem("username"),
+          "Change",
+          "status of user",
+          username
+        );
+
         Swal.fire({
           title: "User status successfully updated!",
           icon: "success",
@@ -766,6 +807,13 @@ function User() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
+        userLog(
+          localStorage.getItem("username"),
+          "Delete",
+          "account",
+          username
+        );
+
         // DELETE IN USERS TABLE
         fetch("http://localhost:3031/api/delete-user", {
           method: "PATCH",
@@ -843,6 +891,30 @@ function User() {
       } else {
         setIsBtnLoading(false);
       }
+    });
+  };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event, user) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event} "${user}"`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
     });
   };
 

@@ -175,6 +175,13 @@ function Product() {
           })
             .then((res) => res.json())
             .then((result) => {
+              userLog(
+                localStorage.getItem("username"),
+                "Update",
+                "transaction as",
+                status
+              );
+
               Swal.fire({
                 title: "Transaction successfully updated!",
                 icon: "success",
@@ -209,6 +216,30 @@ function Product() {
       return trans.status.toLowerCase().includes(e.target.value.toLowerCase());
     });
     setFilteredList(results);
+  };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event, status) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event} "${status}"`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
+    });
   };
 
   return (
