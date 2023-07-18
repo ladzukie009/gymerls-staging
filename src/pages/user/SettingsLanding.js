@@ -143,6 +143,30 @@ export default function MiniDrawer() {
       });
   };
 
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (username, event) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          event_info: `Logoff - ${event}`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
+    });
+  };
+
   const logout = () => {
     Swal.fire({
       title: "Are you sure you want to logout?",
@@ -153,6 +177,7 @@ export default function MiniDrawer() {
       confirmButtonText: "Yes",
     }).then((result) => {
       if (result.isConfirmed) {
+        userLog(localStorage.getItem("username"), "success");
         localStorage.removeItem("username");
         localStorage.removeItem("role");
         navigate("/login");

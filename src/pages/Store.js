@@ -157,16 +157,10 @@ function DrawerAppBar(props) {
       .then((res) => res.json())
       .then((result) => {});
 
-    // cartItems.push(item);
-    // if (cartItems.length !== 0) {
-    //   setCartButtonDisabled(false);
-    // } else {
-    //   setCartButtonDisabled(true);
-    // }
-    // setCartItemQuantity(cartItems.length);
+    userLog(localStorage.getItem("username"), "Add", `${product_name} in cart`);
   };
 
-  const deleteCartItem = (id) => {
+  const deleteCartItem = (id, product_name) => {
     fetch("http://localhost:3031/api/delete-cart", {
       method: "PATCH",
       headers: {
@@ -178,29 +172,19 @@ function DrawerAppBar(props) {
     })
       .then((res) => res.json())
       .then((result) => {
+        userLog(
+          localStorage.getItem("username"),
+          "Delete",
+          `${product_name} in cart`
+        );
         setCartItemQuantity(cartItemQuantity - 1);
         alert("Cart item deleted");
       });
   };
 
-  //   const incrementQuantity = (id) => {
-  //     setCartItems((cartItems) =>
-  //       cartItems.map((item) => {
-  //         // id === item.id ? { ...item, item.quantity + 1)  } : item;
-  //         if (id === item.id) {
-  //           item.quantity++;
-  //           item.total = item.quantity * item.price;
-  //         }
-  //         return item;
-  //       })
-  //     );
-  //   };
-
   function objectLength(obj) {
     var count = 0;
     for (var k in obj) {
-      // if the object has this property and it isn't a property
-      // further up the prototype chain
       if (obj.hasOwnProperty(k)) count++;
     }
     setCartItemQuantity(count);
@@ -233,6 +217,31 @@ function DrawerAppBar(props) {
     }
     setOpenSnackBar(false);
   };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event}`,
+          ip_address: callback,
+          platform: navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
+    });
+  };
+
   return (
     <>
       <Snackbar
@@ -305,7 +314,9 @@ function DrawerAppBar(props) {
                     <Typography>
                       <IconButton
                         aria-label="cart"
-                        onClick={() => deleteCartItem(item.id)}
+                        onClick={() =>
+                          deleteCartItem(item.id, item.product_name)
+                        }
                       >
                         <DeleteForeverIcon color="error" />
                       </IconButton>

@@ -64,10 +64,6 @@ function Settings() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(userProfile[0].password);
-        console.log(oldPassword);
-        console.log(password);
-
         if (oldPassword !== userProfile[0].password) {
           Swal.fire({
             title: "Old password doesn't match",
@@ -88,6 +84,8 @@ function Settings() {
           })
             .then((res) => res.json())
             .then((result) => {
+              userLog(localStorage.getItem("username"), "Update", "password");
+
               Swal.fire({
                 title: "Password successfully updated!",
                 icon: "success",
@@ -100,6 +98,30 @@ function Settings() {
             });
         }
       }
+    });
+  };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event}`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
     });
   };
 

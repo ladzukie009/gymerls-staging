@@ -225,6 +225,7 @@ function Cart() {
         })
           .then((res) => res.json())
           .then((result) => {
+            userLog(localStorage.getItem("username"), "Confirm", "checkout");
             Swal.fire({
               title: "Transaction is successful!",
               icon: "success",
@@ -236,6 +237,30 @@ function Cart() {
             });
           });
       }
+    });
+  };
+
+  const getIpAddress = (callback) => {
+    fetch("https://api.ipify.org?format=json")
+      .then((response) => response.json())
+      .then((data) => callback(data.ip))
+      .catch((error) => console.log(error));
+  };
+
+  const userLog = (author, action, event) => {
+    getIpAddress(function (callback) {
+      fetch("http://localhost:3031/api/insert-log", {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: author,
+          event_info: `${action} - ${event}`,
+          ip_address: callback,
+          platform: window.navigator.userAgentData.platform,
+        }),
+      }).catch((error) => console.log(error));
     });
   };
 
