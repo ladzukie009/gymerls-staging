@@ -37,6 +37,7 @@ import StorageIcon from "@mui/icons-material/Storage";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import Swal from "sweetalert2";
 import Landing from "./Landing";
+import Settings from "../Settings";
 
 const drawerWidth = 240;
 
@@ -454,8 +455,9 @@ export default function MiniDrawer() {
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+        <Settings />
       </Box>
     </Box>
   );

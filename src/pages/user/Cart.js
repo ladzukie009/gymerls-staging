@@ -25,7 +25,7 @@ function Cart() {
 
   const [paymentMethod, setPaymentMethod] = useState("Delivery");
   const [address, setAddress] = useState("");
-  const [isAddressDisable, setIsAddressDisable] = useState(true);
+  const [currentAddress, setCurrentAddress] = useState("");
   const [fullname, setFullname] = useState("");
   const [contact, setContact] = useState("");
   // const [totalAmount, setTotalAmount] = useState(0);
@@ -63,6 +63,22 @@ function Cart() {
         let t = 0;
         result.map(({ sub_total }) => (t = t + sub_total));
         setGrandTotal(t);
+      });
+
+    fetch("http://localhost:3031/api/get-user-by-username", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        username: localStorage.getItem("username"),
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setFullname(result[0].name);
+        setContact(result[0].contact);
+        setCurrentAddress(result[0].address);
       });
   }, []);
 
@@ -124,6 +140,8 @@ function Cart() {
   };
 
   const placeOrder = () => {
+    setAddress(currentAddress);
+    setPaymentMethod("Deliver");
     setOpen(true);
   };
 
@@ -133,10 +151,8 @@ function Cart() {
       setAddress(
         "3rd Floor , Dona Pacita Building beside PureGold Paniqui, M. H Del Pilar Street, Paniqui, Tarlac, Paniqui, Philippines"
       );
-      setIsAddressDisable(true);
     } else {
-      setAddress("");
-      setIsAddressDisable(false);
+      setAddress(currentAddress);
     }
   };
 
@@ -342,6 +358,7 @@ function Cart() {
                           label="Fullname"
                           variant="outlined"
                           margin="normal"
+                          disabled
                           onChange={(e) => setFullname(e.target.value)}
                           fullWidth
                         />
@@ -351,6 +368,7 @@ function Cart() {
                           label="Contact no."
                           variant="outlined"
                           margin="normal"
+                          disabled
                           onChange={(e) => setContact(e.target.value)}
                           fullWidth
                         />
@@ -372,7 +390,7 @@ function Cart() {
                           id="outlined-basic"
                           name="address"
                           label="Address"
-                          disabled={isAddressDisable}
+                          disabled
                           variant="outlined"
                           onChange={(e) => {
                             setAddress(e.target.value);

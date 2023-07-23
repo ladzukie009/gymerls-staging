@@ -28,6 +28,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { DatePicker } from "@mui/x-date-pickers";
 
 function Announcement() {
   const theme = useTheme();
@@ -87,6 +88,16 @@ function Announcement() {
     });
 
     var formattedDate = year + "-" + month + "-" + day + " " + hour;
+    return formattedDate;
+  };
+
+  const dateFormatter = (date) => {
+    var dateToFormat = new Date(date);
+    var year = dateToFormat.toLocaleString("default", { year: "numeric" });
+    var month = dateToFormat.toLocaleString("default", { month: "2-digit" });
+    var day = dateToFormat.toLocaleString("default", { day: "2-digit" });
+
+    var formattedDate = year + "-" + month + "-" + day;
     return formattedDate;
   };
 
@@ -212,14 +223,17 @@ function Announcement() {
                   />
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DateTimePicker"]}>
-                      <DateTimePicker
-                        label="Basic date time picker"
-                        onChange={(e) => {
-                          setEventDate(e.$d);
-                        }}
-                      />
-                    </DemoContainer>
+                    <DatePicker
+                      label="Event date *"
+                      format="YYYY-MM-DD"
+                      sx={{ width: "100%" }}
+                      value={eventDate}
+                      onChange={(newValue) => {
+                        console.log(dateFormatter(newValue));
+                        setEventDate(dateFormatter(newValue));
+                      }}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
                   </LocalizationProvider>
                 </div>
               </DialogContent>

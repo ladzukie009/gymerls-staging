@@ -336,11 +336,42 @@ function User() {
       .then((result) => {});
   };
 
+  //formatter to compute the date
+  const dateFormatter = (date) => {
+    var dateToFormat = new Date(date);
+    var year = dateToFormat.toLocaleString("default", { year: "numeric" });
+    var month = dateToFormat.toLocaleString("default", { month: "2-digit" });
+    var day = dateToFormat.toLocaleString("default", { day: "2-digit" });
+
+    var formattedDate = month + "/" + day + "/" + year;
+    return formattedDate;
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       fetch("http://localhost:3031/api/users")
         .then((response) => response.json())
         .then((data) => {
+          var today = dateFormatter(new Date());
+
+          for (let item of data) {
+            var membershipEndDate = dateFormatter(item.mem_end_date);
+
+            if (today === membershipEndDate) {
+              fetch("http://localhost:3031/api/update-user-status", {
+                method: "PATCH",
+                headers: {
+                  "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                  isActive: 0,
+                  username: item.username,
+                }),
+              }).then((res) => res.json());
+              console.log("dumaan");
+            }
+          }
+
           setFilteredList(data);
           setUsers(data);
           setIsLoading(false);

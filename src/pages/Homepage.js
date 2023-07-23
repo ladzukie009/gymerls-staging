@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -21,27 +20,34 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import WatchLaterIcon from "@mui/icons-material/WatchLater";
+import { useEffect, useState } from "react";
+import Image from "mui-image";
 
 const drawerWidth = 240;
 
 function DrawerAppBar(props) {
   const navigate = useNavigate();
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [items, setItems] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:3031/api/top-products")
+      .then((response) => response.json())
+      .then((data) => {
+        setItems(data);
+      });
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-
-  const openInNewTab = (url) => {
-    window.location.href = url;
   };
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}></Typography>
       <List>
-        <ListItem disablePadding>
+        {/* <ListItem disablePadding>
           <ListItemButton
             sx={{ textAlign: "center" }}
             href="https://www.facebook.com/GYMERL/"
@@ -59,7 +65,7 @@ function DrawerAppBar(props) {
           >
             <ListItemText primary={"Contact"} />
           </ListItemButton>
-        </ListItem>
+        </ListItem> */}
 
         <ListItem disablePadding>
           <ListItemButton
@@ -112,7 +118,7 @@ function DrawerAppBar(props) {
             GYMERL`s Fitness Gym
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button
+            {/* <Button
               sx={{ color: "#fff" }}
               href="https://www.facebook.com/GYMERL/"
               target="_blank"
@@ -125,7 +131,7 @@ function DrawerAppBar(props) {
               target="_blank"
             >
               Contact
-            </Button>
+            </Button> */}
             <Button
               sx={{ color: "#fff" }}
               onClick={(e) => {
@@ -213,6 +219,91 @@ function DrawerAppBar(props) {
             </Stack>
           </Paper>
         </Stack>
+
+        {/* PRODUCTS */}
+        <Stack
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: { xs: 0, md: 10 },
+          }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              borderRadius: 0,
+              textAlign: "left",
+              padding: 1,
+              minWidth: { xs: "100%", md: "70%" },
+              opacity: 0.9,
+            }}
+          >
+            <Grid container>
+              <Grid item xs={12}>
+                <Stack>
+                  <Typography variant="h3" alignSelf={"center"} marginTop={2}>
+                    Our products
+                  </Typography>
+                </Stack>
+                <Stack>
+                  <Grid
+                    container
+                    sx={{ gap: 2, padding: "2rem", justifyContent: "center" }}
+                  >
+                    <Grid
+                      sx={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        rowGap: "2rem",
+                        columnGap: "2rem",
+                        justifyContent: "center",
+                      }}
+                    >
+                      {items.map((item) => {
+                        return (
+                          <Grid
+                            key={item.id}
+                            sx={{
+                              flexDirection: "column",
+                              display: "flex",
+                              padding: 1,
+                              border: "1px solid gray",
+                            }}
+                          >
+                            <Image
+                              src={item.image_url}
+                              alt="empty cart"
+                              height={250}
+                              width={250}
+                              sx={{ backgroundColor: "#fff" }}
+                            />
+                            <Typography sx={{ fontWeight: "bold" }}>
+                              {item.product_name}
+                            </Typography>
+                            <Typography>{item.description}</Typography>
+                            <Typography>{item.price}</Typography>
+                            {/* <Button
+                              variant="contained"
+                              fullWidth
+                              color="success"
+                              onClick={(event) => {
+                                console.log(event.target.value);
+                              }}
+                            >
+                              ADD TO CART
+                            </Button> */}
+                          </Grid>
+                        );
+                      })}
+                    </Grid>
+                  </Grid>
+                </Stack>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Stack>
+        {/* END OF PRODUCTS */}
 
         <Stack>
           <Paper

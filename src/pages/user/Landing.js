@@ -9,6 +9,8 @@ import {
   Backdrop,
   Divider,
   Box,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import { Image } from "mui-image";
 import { styled } from "@mui/material/styles";
@@ -67,7 +69,7 @@ function Landing() {
     var month = dateToFormat.toLocaleString("default", { month: "2-digit" });
     var day = dateToFormat.toLocaleString("default", { day: "2-digit" });
 
-    var formattedDate = year + "-" + month + "-" + day;
+    var formattedDate = month + "/" + day + "/" + year;
     return formattedDate;
   };
 
@@ -108,6 +110,20 @@ function Landing() {
       .then((data) => {
         setCurrentUserMembership(data[0].membership_type);
       });
+  };
+
+  const getDaysDifference = (end_date) => {
+    var date1 = new Date(formatDate(dateNow));
+    var date2 = new Date(formatDate(end_date));
+
+    // To calculate the time difference of two dates
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+
+    // To calculate the no. of days between two dates
+    var result = Difference_In_Time / (1000 * 3600 * 24);
+
+    //the final no. of days (result)
+    setMembershipEnd(result);
   };
 
   const getMealPlan = (user, day) => {
@@ -162,7 +178,23 @@ function Landing() {
       });
   };
 
+  const [membershipEnd, setMembershipEnd] = useState(0);
+
   useEffect(() => {
+    fetch("http://localhost:3031/api/get-user-by-username", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        username: localStorage.getItem("username"),
+      }),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        getDaysDifference(result[0].mem_end_date);
+      });
+
     var dayOfWeek = dateNow.toLocaleDateString("en-us", {
       weekday: "long",
     });
@@ -291,6 +323,17 @@ function Landing() {
                 </Typography>
               </Grid>
             </Grid>
+            {membershipEnd <= 10 ? (
+              <Stack sx={{ width: "100%" }}>
+                <Alert severity="warning">
+                  <AlertTitle>Warning</AlertTitle>
+                  Your account is about to expire in {membershipEnd} day(s).
+                  <strong> Please contact the administrator!</strong>
+                </Alert>
+              </Stack>
+            ) : (
+              <></>
+            )}
             <Grid sx={{ position: "relative" }}>
               <Grid
                 sx={{
