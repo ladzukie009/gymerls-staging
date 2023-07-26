@@ -27,8 +27,7 @@ import * as React from "react";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { DatePicker } from "@mui/x-date-pickers";
+import { DatePicker, TimePicker } from "@mui/x-date-pickers";
 
 function Announcement() {
   const theme = useTheme();
@@ -91,6 +90,18 @@ function Announcement() {
     return formattedDate;
   };
 
+  const formatTime = (time) => {
+    var dateToFormat = new Date(time);
+
+    var hour = dateToFormat.toLocaleString("default", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    var formattedDate = hour;
+    return formattedDate;
+  };
+
   const dateFormatter = (date) => {
     var dateToFormat = new Date(date);
     var year = dateToFormat.toLocaleString("default", { year: "numeric" });
@@ -140,9 +151,11 @@ function Announcement() {
   };
 
   const [eventDate, setEventDate] = useState(null);
+  const [eventTime, setEventTime] = useState("");
 
   const createAnnouncement = (e) => {
     e.preventDefault();
+    setIsBtnLoading(true);
     const data = new FormData(e.currentTarget);
 
     fetch("http://localhost:3031/api/create-announcement", {
@@ -156,10 +169,22 @@ function Announcement() {
         status: 1,
         added_by: localStorage.getItem("username"),
         event_date: eventDate,
+        event_time: eventTime,
       }),
     })
       .then((res) => res.json())
-      .then((result) => {});
+      .then((result) => {
+        Swal.fire({
+          title: "Announcement successfully created!",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(function () {
+          setIsBtnLoading(false);
+          setIsLoading(true);
+          window.location.reload(false);
+        });
+      });
   };
 
   return (
@@ -226,14 +251,27 @@ function Announcement() {
                     <DatePicker
                       label="Event date *"
                       format="YYYY-MM-DD"
+                      margin="normal"
                       sx={{ width: "100%" }}
                       value={eventDate}
                       onChange={(newValue) => {
-                        console.log(dateFormatter(newValue));
                         setEventDate(dateFormatter(newValue));
                       }}
                       renderInput={(params) => <TextField {...params} />}
                     />
+                  </LocalizationProvider>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["TimePicker"]}>
+                      <TimePicker
+                        label="Event time"
+                        margin="normal"
+                        value={eventTime}
+                        sx={{ width: "100%" }}
+                        onChange={(e) => {
+                          setEventTime(formatTime(e));
+                        }}
+                      />
+                    </DemoContainer>
                   </LocalizationProvider>
                 </div>
               </DialogContent>
@@ -270,15 +308,14 @@ function Announcement() {
                     </TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>STATUS</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>ADDED BY</TableCell>
-                    <TableCell sx={{ fontWeight: "bold" }}>
-                      DATE / TIME
-                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>TIME</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>DATE</TableCell>
                   </TableRow>
                 </TableHead>
                 {tableHasNoData ? (
                   <TableBody>
                     <StyledTableRow>
-                      <TableCell align="center" colSpan={5}>
+                      <TableCell align="center" colSpan={6}>
                         {"No logs available"}
                       </TableCell>
                     </StyledTableRow>
@@ -304,8 +341,9 @@ function Announcement() {
                               {event.status ? "Active" : "Inactive"}
                             </TableCell>
                             <TableCell>{event.added_by}</TableCell>
+                            <TableCell>{event.event_time}</TableCell>
                             <TableCell>
-                              {formatDate(event.event_date)}
+                              {dateFormatter(event.event_date)}
                             </TableCell>
                           </StyledTableRow>
                         );

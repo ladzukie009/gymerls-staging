@@ -181,6 +181,7 @@ function Landing() {
   const [membershipEnd, setMembershipEnd] = useState(0);
 
   useEffect(() => {
+    getAnnouncement();
     fetch("http://localhost:3031/api/get-user-by-username", {
       method: "POST",
       headers: {
@@ -213,6 +214,20 @@ function Landing() {
     }, 3000);
     return () => clearTimeout(timer);
   }, []);
+
+  const [announcements, setAnnouncements] = useState([]);
+  const getAnnouncement = () => {
+    fetch("http://localhost:3031/api/get-all-announcement", {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setAnnouncements(data);
+      });
+  };
 
   function getTime() {
     const date = new Date();
@@ -279,6 +294,16 @@ function Landing() {
         setFifthBatch(fifth_batch);
         setLastBatch(last_batch);
       });
+  };
+
+  const dateFormatter = (date) => {
+    var dateToFormat = new Date(date);
+    var year = dateToFormat.toLocaleString("default", { year: "numeric" });
+    var month = dateToFormat.toLocaleString("default", { month: "2-digit" });
+    var day = dateToFormat.toLocaleString("default", { day: "2-digit" });
+
+    var formattedDate = month + "/" + day + "/" + year;
+    return formattedDate;
   };
 
   return (
@@ -578,38 +603,40 @@ function Landing() {
                   <Grid sx={{ display: "flex" }}>
                     <CampaignIcon sx={{ fontSize: "2.5rem", marginRight: 1 }} />
                     <Typography variant="h4">Announcement</Typography>
-                    {/* <Image
-                      src="../images/important.png"
-                      alt="announcement.png"
-                    /> */}
                   </Grid>
-                  <Stack m={1}>
-                    <Paper elevation={3}>
-                      <Typography variant="h5">sample</Typography>
-                    </Paper>
-                  </Stack>
-                  <Stack m={1}>
-                    <Paper elevation={3}>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                      <Typography variant="h5">sample</Typography>
-                    </Paper>
-                  </Stack>
+                  {announcements.map((announcement) => {
+                    return (
+                      <Stack m={1} key={announcement.id}>
+                        <Paper elevation={3} sx={{ padding: 2 }}>
+                          <Typography
+                            variant="button"
+                            sx={{ display: "block" }}
+                          >
+                            <b>DATE: </b>
+                            {dateFormatter(announcement.event_date)}
+                          </Typography>
+                          <Typography variant="button" display={"block"}>
+                            <b>TIME: </b>
+                            {announcement.event_time}
+                          </Typography>
+                          <Grid
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography variant="body1">
+                              <b>"{announcement.title}"</b>
+                            </Typography>
+                            <Typography variant="subtitle1">
+                              {announcement.description}
+                            </Typography>
+                          </Grid>
+                        </Paper>
+                      </Stack>
+                    );
+                  })}
                 </Paper>
               </Grid>
             </Grid>
