@@ -20,6 +20,9 @@ import LinearProgress, {
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CampaignIcon from "@mui/icons-material/Campaign";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import TitleIcon from "@mui/icons-material/Title";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -599,7 +602,6 @@ function Landing() {
               </Grid>
               <Grid item xs={12} md={5} pr={1}>
                 <Paper elevation={3} sx={{ p: 3, height: "100%" }}>
-                  {/* <Grid sx={{ width: "20rem", height: "10rem" }}> */}
                   <Grid sx={{ display: "flex" }}>
                     <CampaignIcon sx={{ fontSize: "2.5rem", marginRight: 1 }} />
                     <Typography variant="h4">Announcement</Typography>
@@ -608,30 +610,35 @@ function Landing() {
                     return (
                       <Stack m={1} key={announcement.id}>
                         <Paper elevation={3} sx={{ padding: 2 }}>
-                          <Typography
-                            variant="button"
-                            sx={{ display: "block" }}
-                          >
-                            <b>DATE: </b>
-                            {dateFormatter(announcement.event_date)}
-                          </Typography>
-                          <Typography variant="button" display={"block"}>
-                            <b>TIME: </b>
-                            {announcement.event_time}
-                          </Typography>
-                          <Grid
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography variant="body1">
-                              <b>"{announcement.title}"</b>
-                            </Typography>
-                            <Typography variant="subtitle1">
-                              {announcement.description}
-                            </Typography>
+                          <Grid container spacing={2}>
+                            <Grid item xs={2}>
+                              <CalendarMonthIcon />
+                            </Grid>
+                            <Grid item xs={10}>
+                              {dateFormatter(announcement.event_date)}
+                            </Grid>
+                            <Grid item xs={2}>
+                              <AccessTimeIcon />
+                            </Grid>
+                            <Grid item xs={10}>
+                              {announcement.event_time}
+                            </Grid>
+                            <Grid item xs={2}>
+                              <TitleIcon />
+                            </Grid>
+                            <Grid item xs={10}>
+                              <Typography variant="body1">
+                                <b>{announcement.title}</b>
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={2}>
+                              <DescriptionIcon />
+                            </Grid>
+                            <Grid item xs={10}>
+                              <Typography variant="subtitle1">
+                                {announcement.description}
+                              </Typography>
+                            </Grid>
                           </Grid>
                         </Paper>
                       </Stack>

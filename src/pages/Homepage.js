@@ -209,11 +209,13 @@ function DrawerAppBar(props) {
           >
             <Stack>
               <Grid paddingLeft={"2rem"} borderLeft={"5px solid orange"}>
-                <Typography variant="h4">ARE YOU READY TO</Typography>
+                <Typography sx={{ fontSize: { xs: "1.75rem", md: "2rem" } }}>
+                  ARE YOU READY TO
+                </Typography>
               </Grid>
             </Stack>
             <Stack>
-              <Typography variant="h3">
+              <Typography sx={{ fontSize: { xs: "2rem", md: "3rem" } }}>
                 GET FIT, STRONG <br />& MOTIVATED!
               </Typography>
             </Stack>
@@ -226,7 +228,7 @@ function DrawerAppBar(props) {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginBottom: { xs: 0, md: 10 },
+            marginBottom: 10,
           }}
         >
           <Paper
@@ -235,6 +237,7 @@ function DrawerAppBar(props) {
               borderRadius: 0,
               textAlign: "left",
               padding: 1,
+              paddingY: 5,
               minWidth: { xs: "100%", md: "70%" },
               opacity: 0.9,
             }}
@@ -299,6 +302,43 @@ function DrawerAppBar(props) {
                     </Grid>
                   </Grid>
                 </Stack>
+                <Stack
+                  sx={{ width: "100%", display: "flex", alignItems: "center" }}
+                >
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      width: "10rem",
+                      alignItems: "center",
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      const currentUser = localStorage.getItem("username");
+                      const currentUserRole = localStorage.getItem("role");
+                      if (
+                        currentUser !== null &&
+                        currentUserRole === "super_admin"
+                      ) {
+                        navigate("/dashboard");
+                      } else if (
+                        currentUser !== null &&
+                        currentUserRole === "admin"
+                      ) {
+                        navigate("/admin/dashboard");
+                      } else if (
+                        currentUser !== null &&
+                        currentUserRole === "user"
+                      ) {
+                        navigate("/store");
+                      } else {
+                        navigate("/login");
+                      }
+                    }}
+                  >
+                    EXPLORE SHOP
+                  </Button>
+                </Stack>
               </Grid>
             </Grid>
           </Paper>
@@ -316,7 +356,7 @@ function DrawerAppBar(props) {
             }}
           >
             <Grid container>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Stack marginBottom={"2rem"}>
                   <Typography variant="h5">GET IN TOUCH</Typography>
                 </Stack>
@@ -331,8 +371,7 @@ function DrawerAppBar(props) {
                   <LocationOnIcon sx={{ fontSize: "2rem" }} />
                   <Typography fontSize={"1.2rem"}>
                     3rd Floor , Dona Pacita Building beside PureGold <br />
-                    Paniqui, M. H Del Pilar Street, Paniqui, Tarlac, <br />
-                    Paniqui, Philippines
+                    M. H Del Pilar Street, Paniqui, Tarlac, Philippines
                   </Typography>
                 </Stack>
 
@@ -362,7 +401,7 @@ function DrawerAppBar(props) {
                   </Typography>
                 </Stack>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} md={6}>
                 <Stack marginBottom={"2rem"}>
                   <Typography variant="h5">OPERATING HOURS</Typography>
                 </Stack>
@@ -375,18 +414,22 @@ function DrawerAppBar(props) {
                   gap={2}
                 >
                   <WatchLaterIcon sx={{ fontSize: "2rem" }} />
-                  <Stack>
-                    <Typography
-                      display="block"
-                      gutterBottom
-                      fontSize={"1.2rem"}
-                    >
-                      Monday to Saturday
-                    </Typography>
-                  </Stack>
-                  <Stack>
-                    <Typography fontSize={"1.2rem"}>7 AM to 9:30 PM</Typography>
-                  </Stack>
+                  <Grid container>
+                    <Grid item xs={12}>
+                      <Typography
+                        display="block"
+                        gutterBottom
+                        fontSize={"1.2rem"}
+                      >
+                        Monday to Saturday
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography fontSize={"1.2rem"}>
+                        7 AM to 9:30 PM
+                      </Typography>
+                    </Grid>
+                  </Grid>
                 </Stack>
               </Grid>
             </Grid>
