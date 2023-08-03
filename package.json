@@ -16,6 +16,8 @@
     "chart.js": "^4.3.0",
     "dayjs": "^1.11.7",
     "generate-password": "^1.7.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.31",
     "mui-image": "^1.0.7",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

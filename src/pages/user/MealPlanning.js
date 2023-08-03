@@ -32,7 +32,6 @@ function MealPlanning() {
         .then((res) => res.json())
         .then((result) => {
           setMeal(result);
-          console.log(result.length);
           if (result.length !== 0) {
             setHasMeal(false);
           } else {

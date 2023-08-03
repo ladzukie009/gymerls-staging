@@ -27,13 +27,14 @@ import {
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme, styled } from "@mui/material/styles";
 import LoadingButton from "@mui/lab/LoadingButton";
-
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-
 import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PrintIcon from "@mui/icons-material/Print";
 
 function User() {
   const relativeTime = require("dayjs/plugin/relativeTime");
@@ -833,6 +834,13 @@ function User() {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("List of users", 20, 10);
+    doc.autoTable({ html: "#usersTable" });
+    doc.save("users.pdf");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -858,6 +866,13 @@ function User() {
                 onChange={filterBySearch}
                 fullWidth
               />
+            </Grid>
+            <Grid item xs={12} display={"flex"}>
+              <Grid>
+                <Button onClick={() => downloadPdf()} startIcon={<PrintIcon />}>
+                  Export as PDF
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -2254,10 +2269,7 @@ function User() {
             </form>
           </Dialog>
 
-          <Paper
-            sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
-            elevation={3}
-          >
+          <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={3}>
             <TableContainer sx={{ maxHeight: 700 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -2371,6 +2383,50 @@ function User() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
+            {/* PDF */}
+            <TableContainer sx={{ maxHeight: 700, display: "none" }}>
+              <Table stickyHeader aria-label="sticky table" id="usersTable">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>USERNAME</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>ROLE</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>NAME</TableCell>
+                  </TableRow>
+                </TableHead>
+                {tableHasNoData ? (
+                  <TableBody>
+                    {filteredList
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((user) => {
+                        return (
+                          <StyledTableRow
+                            hover
+                            // role="checkbox"
+                            tabIndex={-1}
+                            key={user.id}
+                          >
+                            <TableCell>{user.username}</TableCell>
+                            <TableCell>{user.role}</TableCell>
+                            <TableCell>{user.name}</TableCell>
+                          </StyledTableRow>
+                        );
+                      })}
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    <StyledTableRow>
+                      <TableCell align="center" colSpan={3}>
+                        {"No data available"}
+                      </TableCell>
+                    </StyledTableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
           </Paper>
         </div>
       )}

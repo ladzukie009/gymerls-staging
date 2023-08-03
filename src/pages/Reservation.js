@@ -32,6 +32,10 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PrintIcon from "@mui/icons-material/Print";
+
 function Reservation() {
   const [isLoading, setIsLoading] = useState(true);
   const [reservationData, setReservationData] = useState([]);
@@ -548,6 +552,13 @@ function Reservation() {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("Reservation", 20, 10);
+    doc.autoTable({ html: "#reservationTable" });
+    doc.save("reservation.pdf");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -918,12 +929,19 @@ function Reservation() {
                   </LocalizationProvider>
                 </Grid>
               </Grid>
+              <Grid item xs={12} display={"flex"}>
+                <Grid>
+                  <Button
+                    onClick={() => downloadPdf()}
+                    startIcon={<PrintIcon />}
+                  >
+                    Export as PDF
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
           </Stack>
-          <Paper
-            sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
-            elevation={3}
-          >
+          <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={3}>
             <TableContainer sx={{ maxHeight: 700 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -1033,6 +1051,92 @@ function Reservation() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
+            {/* PDF */}
+
+            <TableContainer sx={{ maxHeight: 700, display: "none" }}>
+              <Table
+                stickyHeader
+                aria-label="sticky table"
+                id="reservationTable"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>USERNAME</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>NOTES</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      RESERVATION DATE
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>STATUS</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>TIME SLOT</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>COACH</TableCell>
+                  </TableRow>
+                </TableHead>
+                {tableHasNoData ? (
+                  <TableBody>
+                    <StyledTableRow>
+                      <TableCell align="center" colSpan={6}>
+                        {"No data available"}
+                      </TableCell>
+                    </StyledTableRow>
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    {filteredList
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((res) => {
+                        return (
+                          <StyledTableRow hover tabIndex={-1} key={res.id}>
+                            <TableCell>{res.username}</TableCell>
+                            <TableCell>{res.notes}</TableCell>
+                            <TableCell>
+                              {formatDate(res.reservation_date)}
+                            </TableCell>
+                            <TableCell>
+                              {res.status === "Pending" ? (
+                                <Chip
+                                  label="Pending"
+                                  color="warning"
+                                  sx={{ width: "6rem" }}
+                                />
+                              ) : res.status === "Confirmed" ? (
+                                <Chip
+                                  label="Confirmed"
+                                  color="success"
+                                  sx={{ width: "6rem" }}
+                                />
+                              ) : res.status === "Cancelled" ? (
+                                <Chip
+                                  label="Cancelled"
+                                  color="error"
+                                  sx={{ width: "6rem" }}
+                                />
+                              ) : res.status === "Declined" ? (
+                                <Chip
+                                  label="Declined"
+                                  color="secondary"
+                                  sx={{ width: "6rem" }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="Completed"
+                                  color="primary"
+                                  sx={{ width: "6rem" }}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>{res.time_slot}</TableCell>
+                            <TableCell>{res.coach_name}</TableCell>
+                          </StyledTableRow>
+                        );
+                      })}
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
           </Paper>
         </div>
       )}

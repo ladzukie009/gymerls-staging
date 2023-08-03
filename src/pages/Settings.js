@@ -48,7 +48,6 @@ function Settings() {
       .then((res) => res.json())
       .then((result) => {
         setUserProfile(result);
-        console.log(result);
       });
   }, []);
 

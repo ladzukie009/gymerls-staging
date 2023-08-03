@@ -30,6 +30,9 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import dayjs from "dayjs";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PrintIcon from "@mui/icons-material/Print";
 
 function Announcement() {
   const theme = useTheme();
@@ -345,6 +348,13 @@ function Announcement() {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("Announcement", 20, 10);
+    doc.autoTable({ html: "#AnnouncementTable" });
+    doc.save("announcement.pdf");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -370,6 +380,13 @@ function Announcement() {
                 onChange={filterBySearch}
                 fullWidth
               />
+            </Grid>
+            <Grid item xs={12} display={"flex"}>
+              <Grid>
+                <Button onClick={() => downloadPdf()} startIcon={<PrintIcon />}>
+                  Export as PDF
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
           {/* CREATE ANNOUNCEMENT */}
@@ -534,10 +551,7 @@ function Announcement() {
             </form>
           </Dialog>
 
-          <Paper
-            sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
-            elevation={3}
-          >
+          <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={3}>
             <TableContainer sx={{ maxHeight: 700 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -614,6 +628,57 @@ function Announcement() {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+
+          {/* PDF */}
+          <TableContainer sx={{ maxHeight: 700, display: "none" }}>
+            <Table
+              stickyHeader
+              aria-label="sticky table"
+              id="AnnouncementTable"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold" }}>TITLE</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>DESCRIPTION</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>ADDED BY</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>TIME</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>DATE</TableCell>
+                </TableRow>
+              </TableHead>
+              {tableHasNoData ? (
+                <TableBody>
+                  <StyledTableRow>
+                    <TableCell align="center" colSpan={6}>
+                      {"No data available"}
+                    </TableCell>
+                  </StyledTableRow>
+                </TableBody>
+              ) : (
+                <TableBody>
+                  {filteredList
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((event) => {
+                      return (
+                        <StyledTableRow
+                          hover
+                          // role="checkbox"
+                          tabIndex={-1}
+                          key={event.id}
+                        >
+                          <TableCell>{event.title}</TableCell>
+                          <TableCell>{event.description}</TableCell>
+                          <TableCell>{event.added_by}</TableCell>
+                          <TableCell>{event.event_time}</TableCell>
+                          <TableCell>
+                            {dateFormatter(event.event_date)}
+                          </TableCell>
+                        </StyledTableRow>
+                      );
+                    })}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
         </div>
       )}
     </>

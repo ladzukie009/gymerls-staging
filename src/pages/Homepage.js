@@ -286,16 +286,6 @@ function DrawerAppBar(props) {
                             </Typography>
                             <Typography>{item.description}</Typography>
                             <Typography>{item.price}</Typography>
-                            {/* <Button
-                              variant="contained"
-                              fullWidth
-                              color="success"
-                              onClick={(event) => {
-                                console.log(event.target.value);
-                              }}
-                            >
-                              ADD TO CART
-                            </Button> */}
                           </Grid>
                         );
                       })}

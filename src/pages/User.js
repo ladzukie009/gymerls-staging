@@ -37,6 +37,10 @@ import dayjs from "dayjs";
 
 import Swal from "sweetalert2";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PrintIcon from "@mui/icons-material/Print";
+
 function User() {
   const relativeTime = require("dayjs/plugin/relativeTime");
   const [open, setOpen] = useState(false);
@@ -949,6 +953,13 @@ function User() {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("List of User", 20, 10);
+    doc.autoTable({ html: "#userTable" });
+    doc.save("users.pdf");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -974,6 +985,13 @@ function User() {
                 onChange={filterBySearch}
                 fullWidth
               />
+            </Grid>
+            <Grid item xs={12} display={"flex"}>
+              <Grid>
+                <Button onClick={() => downloadPdf()} startIcon={<PrintIcon />}>
+                  Export as PDF
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
 
@@ -2370,10 +2388,7 @@ function User() {
             </form>
           </Dialog>
 
-          <Paper
-            sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
-            elevation={3}
-          >
+          <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={3}>
             <TableContainer sx={{ maxHeight: 700 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -2482,6 +2497,41 @@ function User() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
+            {/* PDF */}
+            <TableContainer sx={{ maxHeight: 700, display: "none" }}>
+              <Table stickyHeader aria-label="sticky table" id="userTable">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>USERNAME</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>ROLE</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>NAME</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>ADDED BY</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>ACTIVE</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredList
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((user) => {
+                      return (
+                        <StyledTableRow
+                          hover
+                          // role="checkbox"
+                          tabIndex={-1}
+                          key={user.id}
+                        >
+                          <TableCell>{user.username}</TableCell>
+                          <TableCell>{user.role}</TableCell>
+                          <TableCell>{user.name}</TableCell>
+                          <TableCell>{user.added_by}</TableCell>
+                          <TableCell>{user.isActive}</TableCell>
+                        </StyledTableRow>
+                      );
+                    })}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </Paper>
         </div>
       )}

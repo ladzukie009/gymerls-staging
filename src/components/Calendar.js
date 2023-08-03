@@ -41,8 +41,6 @@ export default function BasicDateCalendar() {
             secondBatch.push(item);
           }
         }
-        console.log("7-9 AM:", firstBatch);
-        console.log("9-11 AM:", secondBatch);
       });
   };
 

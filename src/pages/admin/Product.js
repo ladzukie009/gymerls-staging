@@ -28,6 +28,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import Swal from "sweetalert2";
 import Axios from "axios";
 import Image from "mui-image";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PrintIcon from "@mui/icons-material/Print";
 
 function Product() {
   const theme = useTheme();
@@ -333,6 +336,13 @@ function Product() {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("List of product", 20, 10);
+    doc.autoTable({ html: "#productsTable" });
+    doc.save("products.pdf");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -553,12 +563,16 @@ function Product() {
                 fullWidth
               />
             </Grid>
+            <Grid item xs={12} display={"flex"}>
+              <Grid>
+                <Button onClick={() => downloadPdf()} startIcon={<PrintIcon />}>
+                  Export as PDF
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
 
-          <Paper
-            sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
-            elevation={3}
-          >
+          <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={3}>
             <TableContainer sx={{ maxHeight: 700 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -629,6 +643,56 @@ function Product() {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
+            {/* PDF */}
+            <TableContainer sx={{ maxHeight: 700, display: "none" }}>
+              <Table stickyHeader aria-label="sticky table" id="productsTable">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>NAME</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      DESCRIPTION
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>PRICE</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>
+                      ADDED DATE
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                {tableHasNoData ? (
+                  <TableBody>
+                    <StyledTableRow>
+                      <TableCell align="center" colSpan={4}>
+                        {"No data available"}
+                      </TableCell>
+                    </StyledTableRow>
+                  </TableBody>
+                ) : (
+                  <TableBody>
+                    {filteredList
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((prod) => {
+                        return (
+                          <StyledTableRow
+                            hover
+                            // role="checkbox"
+                            tabIndex={-1}
+                            key={prod.id}
+                          >
+                            <TableCell>{prod.product_name}</TableCell>
+                            <TableCell>{prod.description}</TableCell>
+                            <TableCell>{prod.price}</TableCell>
+                            <TableCell>{formatDate(prod.added_date)}</TableCell>
+                          </StyledTableRow>
+                        );
+                      })}
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
           </Paper>
         </div>
       )}

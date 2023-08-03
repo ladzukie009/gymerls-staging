@@ -26,6 +26,9 @@ import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Swal from "sweetalert2";
 import Axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PrintIcon from "@mui/icons-material/Print";
 
 function Product() {
   const [isLoading, setIsLoading] = useState(true);
@@ -242,6 +245,13 @@ function Product() {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+    doc.text("Orders", 20, 10);
+    doc.autoTable({ html: "#orderTable" });
+    doc.save("orders.pdf");
+  };
+
   return (
     <>
       {isLoading ? (
@@ -350,12 +360,16 @@ function Product() {
                 ))}
               </TextField>
             </Grid>
+            <Grid item xs={12} display={"flex"}>
+              <Grid>
+                <Button onClick={() => downloadPdf()} startIcon={<PrintIcon />}>
+                  Export as PDF
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
 
-          <Paper
-            sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
-            elevation={3}
-          >
+          <Paper sx={{ width: "100%", overflow: "hidden" }} elevation={3}>
             <TableContainer sx={{ maxHeight: 700 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -445,6 +459,69 @@ function Product() {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
+
+          {/* PDF */}
+
+          <TableContainer sx={{ maxHeight: 700, display: "none" }}>
+            <Table stickyHeader aria-label="sticky table" id="orderTable">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: "bold" }}>NAME</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>CONTACT</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>ITEMS</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>METHOD</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>TOTAL</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>
+                    TRANSACTION DATE
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>STATUS</TableCell>
+                </TableRow>
+              </TableHead>
+              {tableHasNoData ? (
+                <TableBody>
+                  <StyledTableRow>
+                    <TableCell align="center" colSpan={7}>
+                      {"No data available"}
+                    </TableCell>
+                  </StyledTableRow>
+                </TableBody>
+              ) : (
+                <TableBody>
+                  {filteredList
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((trans) => {
+                      return (
+                        <StyledTableRow hover tabIndex={-1} key={trans.id}>
+                          <TableCell>{trans.fullname}</TableCell>
+                          <TableCell>{trans.contact}</TableCell>
+                          <TableCell>{trans.items}</TableCell>
+                          <TableCell>{trans.method}</TableCell>
+                          <TableCell>{trans.total}</TableCell>
+                          <TableCell>
+                            {formatDate(trans.transaction_date)}
+                          </TableCell>
+                          <TableCell>
+                            {trans.status === "Pending" ? (
+                              <Chip
+                                label="Pending"
+                                color="warning"
+                                sx={{ width: "6rem" }}
+                              />
+                            ) : (
+                              <Chip
+                                label="Completed"
+                                color="success"
+                                sx={{ width: "6rem" }}
+                              />
+                            )}
+                          </TableCell>
+                        </StyledTableRow>
+                      );
+                    })}
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
         </div>
       )}
     </>
