@@ -31,11 +31,17 @@ function DrawerAppBar(props) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const [items, setItems] = useState([]);
+  const [noItems, setNoItems] = useState(true);
   useEffect(() => {
     fetch("http://localhost:3031/api/top-products")
       .then((response) => response.json())
       .then((data) => {
-        setItems(data);
+        if (data.length === 0) {
+          setNoItems(true);
+        } else {
+          setNoItems(false);
+          setItems(data);
+        }
       });
   }, []);
 
@@ -223,116 +229,125 @@ function DrawerAppBar(props) {
         </Stack>
 
         {/* PRODUCTS */}
-        <Stack
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: 10,
-          }}
-        >
-          <Paper
-            elevation={3}
+        {noItems ? (
+          <></>
+        ) : (
+          <Stack
             sx={{
-              borderRadius: 0,
-              textAlign: "left",
-              padding: 1,
-              paddingY: 5,
-              minWidth: { xs: "100%", md: "70%" },
-              opacity: 0.9,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 10,
             }}
           >
-            <Grid container>
-              <Grid item xs={12}>
-                <Stack>
-                  <Typography variant="h3" alignSelf={"center"} marginTop={2}>
-                    Our products
-                  </Typography>
-                </Stack>
-                <Stack>
-                  <Grid
-                    container
-                    sx={{ gap: 2, padding: "2rem", justifyContent: "center" }}
-                  >
+            <Paper
+              elevation={3}
+              sx={{
+                borderRadius: 0,
+                textAlign: "left",
+                padding: 1,
+                paddingY: 5,
+                minWidth: { xs: "100%", md: "70%" },
+                opacity: 0.9,
+              }}
+            >
+              <Grid container>
+                <Grid item xs={12}>
+                  <Stack>
+                    <Typography variant="h3" alignSelf={"center"} marginTop={2}>
+                      Our products
+                    </Typography>
+                  </Stack>
+                  <Stack>
                     <Grid
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        rowGap: "2rem",
-                        columnGap: "2rem",
-                        justifyContent: "center",
-                      }}
+                      container
+                      sx={{ gap: 2, padding: "2rem", justifyContent: "center" }}
                     >
-                      {items.map((item) => {
-                        return (
-                          <Grid
-                            key={item.id}
-                            sx={{
-                              flexDirection: "column",
-                              display: "flex",
-                              padding: 1,
-                              border: "1px solid gray",
-                            }}
-                          >
-                            <Image
-                              src={item.image_url}
-                              alt="empty cart"
-                              height={250}
-                              width={250}
-                              sx={{ backgroundColor: "#fff" }}
-                            />
-                            <Typography sx={{ fontWeight: "bold" }}>
-                              {item.product_name}
-                            </Typography>
-                            <Typography>{item.description}</Typography>
-                            <Typography>{item.price}</Typography>
-                          </Grid>
-                        );
-                      })}
+                      <Grid
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          rowGap: "2rem",
+                          columnGap: "2rem",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {items.map((item) => {
+                          return (
+                            <Grid
+                              key={item.id}
+                              sx={{
+                                flexDirection: "column",
+                                display: "flex",
+                                padding: 1,
+                                border: "1px solid gray",
+                              }}
+                            >
+                              <Image
+                                src={item.image_url}
+                                alt="empty cart"
+                                height={250}
+                                width={250}
+                                sx={{ backgroundColor: "#fff" }}
+                              />
+                              <Typography sx={{ fontWeight: "bold" }}>
+                                {item.product_name}
+                              </Typography>
+                              <Typography>{item.description}</Typography>
+                              <Typography>{item.price}</Typography>
+                            </Grid>
+                          );
+                        })}
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </Stack>
-                <Stack
-                  sx={{ width: "100%", display: "flex", alignItems: "center" }}
-                >
-                  <Button
-                    variant="outlined"
+                  </Stack>
+                  <Stack
                     sx={{
-                      width: "10rem",
+                      width: "100%",
+                      display: "flex",
                       alignItems: "center",
                     }}
-                    onClick={(e) => {
-                      e.preventDefault();
-
-                      const currentUser = localStorage.getItem("username");
-                      const currentUserRole = localStorage.getItem("role");
-                      if (
-                        currentUser !== null &&
-                        currentUserRole === "super_admin"
-                      ) {
-                        navigate("/dashboard");
-                      } else if (
-                        currentUser !== null &&
-                        currentUserRole === "admin"
-                      ) {
-                        navigate("/admin/dashboard");
-                      } else if (
-                        currentUser !== null &&
-                        currentUserRole === "user"
-                      ) {
-                        navigate("/store");
-                      } else {
-                        navigate("/login");
-                      }
-                    }}
                   >
-                    EXPLORE SHOP
-                  </Button>
-                </Stack>
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        width: "10rem",
+                        alignItems: "center",
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        const currentUser = localStorage.getItem("username");
+                        const currentUserRole = localStorage.getItem("role");
+                        if (
+                          currentUser !== null &&
+                          currentUserRole === "super_admin"
+                        ) {
+                          navigate("/dashboard");
+                        } else if (
+                          currentUser !== null &&
+                          currentUserRole === "admin"
+                        ) {
+                          navigate("/admin/dashboard");
+                        } else if (
+                          currentUser !== null &&
+                          currentUserRole === "user"
+                        ) {
+                          navigate("/store");
+                        } else {
+                          navigate("/login");
+                        }
+                      }}
+                    >
+                      EXPLORE SHOP
+                    </Button>
+                  </Stack>
+                </Grid>
               </Grid>
-            </Grid>
-          </Paper>
-        </Stack>
+            </Paper>
+          </Stack>
+        )}
+
         {/* END OF PRODUCTS */}
 
         <Stack>
@@ -345,8 +360,8 @@ function DrawerAppBar(props) {
               opacity: 0.9,
             }}
           >
-            <Grid container>
-              <Grid item xs={12} md={6}>
+            <Grid container sx={{ maxWidth: "1080px", margin: "0 auto" }}>
+              <Grid item xs={12} md={4}>
                 <Stack marginBottom={"2rem"}>
                   <Typography variant="h5">GET IN TOUCH</Typography>
                 </Stack>
@@ -391,7 +406,7 @@ function DrawerAppBar(props) {
                   </Typography>
                 </Stack>
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <Stack marginBottom={"2rem"}>
                   <Typography variant="h5">OPERATING HOURS</Typography>
                 </Stack>
@@ -420,6 +435,31 @@ function DrawerAppBar(props) {
                       </Typography>
                     </Grid>
                   </Grid>
+                </Stack>
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                md={4}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Stack marginBottom={"2rem"}>
+                  <Typography variant="h5">
+                    SCAN THE QR CODE <br />
+                    TO DOWNLOAD THE APP
+                  </Typography>
+                </Stack>
+                <Stack
+                  sx={{
+                    maxWidth: "15rem",
+                  }}
+                >
+                  <Image src="../images/qr-code.jpg" alt="qr-code.jpg" />
                 </Stack>
               </Grid>
             </Grid>

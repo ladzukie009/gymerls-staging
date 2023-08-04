@@ -33,7 +33,6 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
-import StorageIcon from "@mui/icons-material/Storage";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import Swal from "sweetalert2";
 import UserLogs from "./UserLogs";
@@ -386,22 +385,6 @@ export default function MiniDrawer() {
                       User logs
                     </Typography>
                   </ListItemText>
-                </ListItemButton>
-              </List>
-              <List component="div" disablePadding>
-                <ListItemButton
-                  sx={{ pl: 4 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = "/admin/database";
-                  }}
-                >
-                  <ListItemIcon>
-                    <Tooltip title="Database">
-                      <StorageIcon />
-                    </Tooltip>
-                  </ListItemIcon>
-                  <ListItemText primary="Database" />
                 </ListItemButton>
               </List>
               <List component="div" disablePadding>
