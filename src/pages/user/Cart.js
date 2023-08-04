@@ -44,7 +44,7 @@ function Cart() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3031/api/get-cart-by-id", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-cart-by-id", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -65,7 +65,7 @@ function Cart() {
         setGrandTotal(t);
       });
 
-    fetch("http://localhost:3031/api/get-user-by-username", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -157,7 +157,7 @@ function Cart() {
   };
 
   const deleteCartItem = (id) => {
-    fetch("http://localhost:3031/api/delete-cart", {
+    fetch("https://gymerls-api-v2.vercel.app/api/delete-cart", {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -174,7 +174,7 @@ function Cart() {
   };
 
   const deleteCartItemAfterCheckout = (id) => {
-    fetch("http://localhost:3031/api/delete-cart", {
+    fetch("https://gymerls-api-v2.vercel.app/api/delete-cart", {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -221,7 +221,7 @@ function Cart() {
 
         const transactionDate = formatDate(new Date());
 
-        fetch("http://localhost:3031/api/transaction", {
+        fetch("https://gymerls-api-v2.vercel.app/api/transaction", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -265,7 +265,7 @@ function Cart() {
 
   const userLog = (author, action, event) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

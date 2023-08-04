@@ -77,16 +77,19 @@ function Landing() {
   };
 
   const getAllSchedule = (user) => {
-    fetch("http://localhost:3031/api/get-reservation-by-username-and-date", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        username: user,
-        reservation_date: formatDate(new Date()),
-      }),
-    })
+    fetch(
+      "https://gymerls-api-v2.vercel.app/api/get-reservation-by-username-and-date",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: user,
+          reservation_date: formatDate(new Date()),
+        }),
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         setTodaySchedules(data);
@@ -100,7 +103,7 @@ function Landing() {
 
   const [currentUserMembership, setCurrentUserMembership] = useState("");
   const getCurrentUserInfo = (user) => {
-    fetch("http://localhost:3031/api/get-user-by-username", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -130,7 +133,7 @@ function Landing() {
   };
 
   const getMealPlan = (user, day) => {
-    fetch("http://localhost:3031/api/meal-plan", {
+    fetch("https://gymerls-api-v2.vercel.app/api/meal-plan", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -185,7 +188,7 @@ function Landing() {
 
   useEffect(() => {
     getAnnouncement();
-    fetch("http://localhost:3031/api/get-user-by-username", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -220,7 +223,7 @@ function Landing() {
 
   const [announcements, setAnnouncements] = useState([]);
   const getAnnouncement = () => {
-    fetch("http://localhost:3031/api/get-all-announcement", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-all-announcement", {
       method: "GET",
       headers: {
         "Content-type": "application/json",
@@ -254,7 +257,7 @@ function Landing() {
     setLastBatch([]);
 
     fetch(
-      "http://localhost:3031/api/get-reservation-by-date-and-status-is-confirmed",
+      "https://gymerls-api-v2.vercel.app/api/get-reservation-by-date-and-status-is-confirmed",
       {
         method: "POST",
         headers: {

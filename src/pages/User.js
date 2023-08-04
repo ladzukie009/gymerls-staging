@@ -202,7 +202,7 @@ function User() {
   };
 
   const populateRoleInput = () => {
-    fetch("http://localhost:3031/api/roles")
+    fetch("https://gymerls-api-v2.vercel.app/api/roles")
       .then((response) => response.json())
       .then((data) => {
         const newData = data.filter((object) => {
@@ -226,7 +226,7 @@ function User() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/register", {
+        fetch("https://gymerls-api-v2.vercel.app/api/register", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -281,7 +281,7 @@ function User() {
     setcreateButtonIsDisabled(true);
     setIsVisible(true);
     if (username.length >= 5) {
-      fetch("http://localhost:3031/api/validate-user", {
+      fetch("https://gymerls-api-v2.vercel.app/api/validate-user", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -310,7 +310,7 @@ function User() {
     const formattedStartDate = formatDate(startDate);
     const formattedEndDate = formatDate(endDate);
 
-    fetch("http://localhost:3031/api/create-user-profile", {
+    fetch("https://gymerls-api-v2.vercel.app/api/create-user-profile", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -353,7 +353,7 @@ function User() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetch("http://localhost:3031/api/users")
+      fetch("https://gymerls-api-v2.vercel.app/api/users")
         .then((response) => response.json())
         .then((data) => {
           var today = dateFormatter(new Date());
@@ -362,16 +362,19 @@ function User() {
             var membershipEndDate = dateFormatter(item.mem_end_date);
 
             if (today === membershipEndDate) {
-              fetch("http://localhost:3031/api/update-user-status", {
-                method: "PATCH",
-                headers: {
-                  "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                  isActive: 0,
-                  username: item.username,
-                }),
-              }).then((res) => res.json());
+              fetch(
+                "https://gymerls-api-v2.vercel.app/api/update-user-status",
+                {
+                  method: "PATCH",
+                  headers: {
+                    "Content-type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    isActive: 0,
+                    username: item.username,
+                  }),
+                }
+              ).then((res) => res.json());
               console.log("dumaan");
             }
           }
@@ -396,7 +399,7 @@ function User() {
 
   const handleClickOpenModalUpdate = (user_name) => {
     setOpenModalUpdate(true);
-    fetch("http://localhost:3031/api/get-user-by-username", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -452,7 +455,7 @@ function User() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/update-user", {
+        fetch("https://gymerls-api-v2.vercel.app/api/update-user", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -507,7 +510,7 @@ function User() {
     setMealPlanUser(username);
     setOpenModalMealPlanning(true);
 
-    fetch("http://localhost:3031/api/meal-plan", {
+    fetch("https://gymerls-api-v2.vercel.app/api/meal-plan", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -589,7 +592,7 @@ function User() {
     setIsBtnLoading(true);
     const data = new FormData(event.currentTarget);
 
-    fetch("http://localhost:3031/api/create-meal-planning", {
+    fetch("https://gymerls-api-v2.vercel.app/api/create-meal-planning", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -657,7 +660,7 @@ function User() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/update-meal-planning", {
+        fetch("https://gymerls-api-v2.vercel.app/api/update-meal-planning", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -735,7 +738,7 @@ function User() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/update-password", {
+        fetch("https://gymerls-api-v2.vercel.app/api/update-password", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -791,7 +794,7 @@ function User() {
   };
 
   const handleUserStatus = (status, username) => {
-    fetch("http://localhost:3031/api/update-user-status", {
+    fetch("https://gymerls-api-v2.vercel.app/api/update-user-status", {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -850,7 +853,7 @@ function User() {
         );
 
         // DELETE IN USERS TABLE
-        fetch("http://localhost:3031/api/delete-user", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-user", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -861,7 +864,7 @@ function User() {
         }).then((res) => res.json());
 
         // DELETE IN USER_PROFILE TABLE
-        fetch("http://localhost:3031/api/delete-user-profile", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-user-profile", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -872,7 +875,7 @@ function User() {
         }).then((res) => res.json());
 
         // DELETE IN MEAL_PLAN TABLE
-        fetch("http://localhost:3031/api/delete-user-meal-plan", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-user-meal-plan", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -883,7 +886,7 @@ function User() {
         }).then((res) => res.json());
 
         // DELETE IN TRANSACTION TABLE
-        fetch("http://localhost:3031/api/delete-user-transaction", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-user-transaction", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -894,7 +897,7 @@ function User() {
         }).then((res) => res.json());
 
         // DELETE IN RESERVATION TABLE
-        fetch("http://localhost:3031/api/delete-user-reservation", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-user-reservation", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -905,7 +908,7 @@ function User() {
         }).then((res) => res.json());
 
         // DELETE IN CART TABLE
-        fetch("http://localhost:3031/api/delete-user-cart", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-user-cart", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -938,7 +941,7 @@ function User() {
 
   const userLog = (author, action, event, user) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

@@ -36,7 +36,7 @@ function Settings() {
     useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3031/api/get-admin-by-username", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-admin-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -73,7 +73,7 @@ function Settings() {
             timer: 1500,
           });
         } else {
-          fetch("http://localhost:3031/api/update-password", {
+          fetch("https://gymerls-api-v2.vercel.app/api/update-password", {
             method: "PATCH",
             headers: {
               "Content-type": "application/json",
@@ -111,7 +111,7 @@ function Settings() {
 
   const userLog = (author, action, event) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

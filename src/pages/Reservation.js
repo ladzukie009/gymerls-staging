@@ -187,7 +187,7 @@ function Reservation() {
     getReservationByDate(reservationDate);
 
     setOpenCreateModal(true);
-    fetch("http://localhost:3031/api/user-membership")
+    fetch("https://gymerls-api-v2.vercel.app/api/user-membership")
       .then((response) => response.json())
       .then((data) => {
         setListOfUser(data);
@@ -198,7 +198,7 @@ function Reservation() {
     var formattedDate = formatDate(date);
 
     fetch(
-      "http://localhost:3031/api/get-reservation-by-date-and-status-is-confirmed",
+      "https://gymerls-api-v2.vercel.app/api/get-reservation-by-date-and-status-is-confirmed",
       {
         method: "POST",
         headers: {
@@ -273,7 +273,7 @@ function Reservation() {
   useEffect(() => {
     const timer = setTimeout(() => {
       var formattedDate = formatDate(new Date());
-      fetch("http://localhost:3031/api/get-reservation-by-date", {
+      fetch("https://gymerls-api-v2.vercel.app/api/get-reservation-by-date", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -323,7 +323,7 @@ function Reservation() {
     setSelectStatus("All");
     var formattedDate = formatDate(date);
 
-    fetch("http://localhost:3031/api/get-reservation-by-date", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-reservation-by-date", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -352,19 +352,22 @@ function Reservation() {
       // filteredDataByDate(filterByDate === null ? new Date() : filterByDate);
       window.location.reload(false);
     } else {
-      fetch("http://localhost:3031/api/get-reservation-by-date-and-status", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-          reservation_date:
-            filterByDate === null
-              ? formatDate(new Date())
-              : formatDate(filterByDate),
-          status: status,
-        }),
-      })
+      fetch(
+        "https://gymerls-api-v2.vercel.app/api/get-reservation-by-date-and-status",
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({
+            reservation_date:
+              filterByDate === null
+                ? formatDate(new Date())
+                : formatDate(filterByDate),
+            status: status,
+          }),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
           if (data.length === 0) {
@@ -395,7 +398,7 @@ function Reservation() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/create-reservation", {
+        fetch("https://gymerls-api-v2.vercel.app/api/create-reservation", {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -441,7 +444,7 @@ function Reservation() {
     setCurrentUserId(id);
     getReservationByDate(date);
     setOpenModalUpdate(true);
-    fetch("http://localhost:3031/api/get-reservation-by-id", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-reservation-by-id", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -474,7 +477,7 @@ function Reservation() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/update-reservation", {
+        fetch("https://gymerls-api-v2.vercel.app/api/update-reservation", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -537,7 +540,7 @@ function Reservation() {
 
   const userLog = (author, action, event, user, status) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

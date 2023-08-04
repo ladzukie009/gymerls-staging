@@ -64,7 +64,7 @@ function Announcement() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetch("http://localhost:3031/api/get-all-announcement")
+      fetch("https://gymerls-api-v2.vercel.app/api/get-all-announcement")
         .then((response) => response.json())
         .then((data) => {
           setAnnouncement(data);
@@ -156,7 +156,7 @@ function Announcement() {
   const [updateEventTime, setUpdateEventTime] = useState("");
 
   const getAnnouncementById = (id) => {
-    fetch("http://localhost:3031/api/get-announcement-by-id", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-announcement-by-id", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -217,7 +217,7 @@ function Announcement() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("http://localhost:3031/api/update-announcement", {
+        fetch("https://gymerls-api-v2.vercel.app/api/update-announcement", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -255,7 +255,7 @@ function Announcement() {
     setIsBtnLoading(true);
     const data = new FormData(e.currentTarget);
 
-    fetch("http://localhost:3031/api/create-announcement", {
+    fetch("https://gymerls-api-v2.vercel.app/api/create-announcement", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -300,7 +300,7 @@ function Announcement() {
         userLog(localStorage.getItem("username"), "Delete", "announcement");
 
         // DELETE IN ANNOUNCEMENT TABLE
-        fetch("http://localhost:3031/api/delete-announcement", {
+        fetch("https://gymerls-api-v2.vercel.app/api/delete-announcement", {
           method: "PATCH",
           headers: {
             "Content-type": "application/json",
@@ -333,7 +333,7 @@ function Announcement() {
 
   const userLog = (author, action, event) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

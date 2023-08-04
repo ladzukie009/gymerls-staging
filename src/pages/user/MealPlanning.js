@@ -20,7 +20,7 @@ function MealPlanning() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-      fetch("http://localhost:3031/api/meal-plan", {
+      fetch("https://gymerls-api-v2.vercel.app/api/meal-plan", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

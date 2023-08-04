@@ -81,7 +81,7 @@ function Product() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      fetch("http://localhost:3031/api/transactions")
+      fetch("https://gymerls-api-v2.vercel.app/api/transactions")
         .then((response) => response.json())
         .then((data) => {
           setTransaction(data);
@@ -165,7 +165,7 @@ function Product() {
     }).then((result) => {
       if (result.isConfirmed) {
         uploadImageToCloud(function (callback) {
-          fetch("http://localhost:3031/api/update-transaction", {
+          fetch("https://gymerls-api-v2.vercel.app/api/update-transaction", {
             method: "PATCH",
             headers: {
               "Content-type": "application/json",
@@ -230,7 +230,7 @@ function Product() {
 
   const userLog = (author, action, event, status) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",

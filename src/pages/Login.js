@@ -52,7 +52,7 @@ export default function SignInSide() {
 
   const userLog = (username, event) => {
     getIpAddress(function (callback) {
-      fetch("http://localhost:3031/api/insert-log", {
+      fetch("https://gymerls-api-v2.vercel.app/api/insert-log", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
@@ -73,7 +73,7 @@ export default function SignInSide() {
     const data = new FormData(event.currentTarget);
     const currentUsername = data.get("username");
 
-    fetch("http://localhost:3031/api/get-user", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-user", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

@@ -23,7 +23,7 @@ export default function BasicDateCalendar() {
     setFirstBatch([]);
     setSecondBatch([]);
 
-    fetch("http://localhost:3031/api/get-reservation-by-date", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-reservation-by-date", {
       method: "POST",
       headers: {
         "Content-type": "application/json",

@@ -37,7 +37,7 @@ export default function Chart() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3031/api/all-user")
+    fetch("https://gymerls-api-v2.vercel.app/api/all-user")
       .then((response) => response.json())
       .then((data) => {
         const super_admin_count = data.filter((u) => u.role === "super_admin");

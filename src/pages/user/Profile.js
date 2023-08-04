@@ -29,7 +29,7 @@ export default function TemporaryDrawer() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3031/api/get-user-by-username", {
+    fetch("https://gymerls-api-v2.vercel.app/api/get-user-by-username", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
