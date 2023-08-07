@@ -576,6 +576,7 @@ function Product() {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
+                    <TableCell sx={{ fontWeight: "bold" }}>IMAGE</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>NAME</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>
                       DESCRIPTION
@@ -593,7 +594,7 @@ function Product() {
                 {tableHasNoData ? (
                   <TableBody>
                     <StyledTableRow>
-                      <TableCell align="center" colSpan={6}>
+                      <TableCell align="center" colSpan={7}>
                         {"No data available"}
                       </TableCell>
                     </StyledTableRow>
@@ -613,6 +614,14 @@ function Product() {
                             tabIndex={-1}
                             key={prod.id}
                           >
+                            <TableCell>
+                              <Image
+                                src={prod.image_url}
+                                alt="image.jpg"
+                                height={50}
+                                width={50}
+                              />
+                            </TableCell>
                             <TableCell>{prod.product_name}</TableCell>
                             <TableCell>{prod.description}</TableCell>
                             <TableCell>{prod.price}</TableCell>

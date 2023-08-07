@@ -53,7 +53,7 @@ function DrawerAppBar(props) {
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
       <Typography variant="h6" sx={{ my: 2 }}></Typography>
       <List>
-        {/* <ListItem disablePadding>
+        <ListItem disablePadding>
           <ListItemButton
             sx={{ textAlign: "center" }}
             href="https://www.facebook.com/GYMERL/"
@@ -71,7 +71,7 @@ function DrawerAppBar(props) {
           >
             <ListItemText primary={"Contact"} />
           </ListItemButton>
-        </ListItem> */}
+        </ListItem>
 
         <ListItem disablePadding>
           <ListItemButton
@@ -124,7 +124,7 @@ function DrawerAppBar(props) {
             GYMERL`s Fitness Gym
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            {/* <Button
+            <Button
               sx={{ color: "#fff" }}
               href="https://www.facebook.com/GYMERL/"
               target="_blank"
@@ -137,7 +137,7 @@ function DrawerAppBar(props) {
               target="_blank"
             >
               Contact
-            </Button> */}
+            </Button>
             <Button
               sx={{ color: "#fff" }}
               onClick={(e) => {
@@ -188,9 +188,9 @@ function DrawerAppBar(props) {
         component="main"
         sx={{
           width: "100%",
-          backgroundImage:
-            "url(https://www.technogym.com/wpress/wp-content/uploads/2019/02/technogym_run_hero.jpg)",
+          backgroundImage: "url(../images/homepage-bg.jpg)",
           backgroundAttachment: "fixed",
+          backgroundPosition: "center",
         }}
       >
         <Toolbar />

@@ -136,8 +136,7 @@ export default function SignInSide() {
           md={7}
           lg={8}
           sx={{
-            backgroundImage:
-              "url(https://static.wixstatic.com/media/11062b_449c3253e3484573943d20b25ba88289~mv2_d_7360_4912_s_4_2.jpg/v1/fill/w_1439,h_880,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/11062b_449c3253e3484573943d20b25ba88289~mv2_d_7360_4912_s_4_2.jpg)",
+            backgroundImage: "url(../images/login-bg.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
