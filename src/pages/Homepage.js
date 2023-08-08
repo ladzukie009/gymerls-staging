@@ -14,7 +14,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Grid, Paper, Stack } from "@mui/material";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CallIcon from "@mui/icons-material/Call";
@@ -459,7 +459,14 @@ function DrawerAppBar(props) {
                     maxWidth: "15rem",
                   }}
                 >
-                  <Image src="../images/qr-code.jpg" alt="qr-code.jpg" />
+                  <Image src="../images/new-qr.jpg" alt="qr-code.jpg" />
+                  <Link
+                    to="https://shorturl.at/hioMR"
+                    underline="always"
+                    sx={{ textAlign: "center" }}
+                  >
+                    {"https://shorturl.at/hioMR"}
+                  </Link>
                 </Stack>
               </Grid>
             </Grid>
