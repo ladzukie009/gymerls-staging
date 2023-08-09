@@ -76,6 +76,16 @@ function Landing() {
     return formattedDate;
   };
 
+  const formatDateYearFirst = (date) => {
+    var dateToFormat = new Date(date);
+    var year = dateToFormat.toLocaleString("default", { year: "numeric" });
+    var month = dateToFormat.toLocaleString("default", { month: "2-digit" });
+    var day = dateToFormat.toLocaleString("default", { day: "2-digit" });
+
+    var formattedDate = year + "-" + month + "-" + day;
+    return formattedDate;
+  };
+
   const getAllSchedule = (user) => {
     fetch(
       "https://gymerls-api-v2.vercel.app/api/get-reservation-by-username-and-date",
@@ -86,7 +96,7 @@ function Landing() {
         },
         body: JSON.stringify({
           username: user,
-          reservation_date: formatDate(new Date()),
+          reservation_date: formatDateYearFirst(new Date()),
         }),
       }
     )
