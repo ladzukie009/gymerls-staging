@@ -56,7 +56,7 @@ function DrawerAppBar(props) {
         <ListItem disablePadding>
           <ListItemButton
             sx={{ textAlign: "center" }}
-            href="https://www.facebook.com/GYMERL/"
+            href="https://jfkpanim.wixsite.com/gymerlsfitnessgym20?fbclid=IwAR1AXnzKRmJKL_4-jysmuj9cIQ5ofH1GBi-4zJ3WKfuzn1UhbTg5qaOQAGI"
             target="_blank"
           >
             <ListItemText primary={"About"} />
@@ -66,7 +66,7 @@ function DrawerAppBar(props) {
         <ListItem disablePadding>
           <ListItemButton
             sx={{ textAlign: "center" }}
-            href="https://jfkpanim.wixsite.com/gymerlsfitnessgym20?fbclid=IwAR1AXnzKRmJKL_4-jysmuj9cIQ5ofH1GBi-4zJ3WKfuzn1UhbTg5qaOQAGI"
+            href="https://www.facebook.com/GYMERL/"
             target="_blank"
           >
             <ListItemText primary={"Contact"} />
@@ -126,14 +126,14 @@ function DrawerAppBar(props) {
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             <Button
               sx={{ color: "#fff" }}
-              href="https://www.facebook.com/GYMERL/"
+              href="https://jfkpanim.wixsite.com/gymerlsfitnessgym20?fbclid=IwAR1AXnzKRmJKL_4-jysmuj9cIQ5ofH1GBi-4zJ3WKfuzn1UhbTg5qaOQAGI"
               target="_blank"
             >
               About
             </Button>
             <Button
               sx={{ color: "#fff" }}
-              href="https://jfkpanim.wixsite.com/gymerlsfitnessgym20?fbclid=IwAR1AXnzKRmJKL_4-jysmuj9cIQ5ofH1GBi-4zJ3WKfuzn1UhbTg5qaOQAGI"
+              href="https://www.facebook.com/GYMERL/"
               target="_blank"
             >
               Contact
