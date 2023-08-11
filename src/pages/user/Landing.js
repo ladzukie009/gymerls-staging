@@ -258,7 +258,8 @@ function Landing() {
   }, 300000);
 
   const getReservationByDate = (date) => {
-    var formattedDate = formatDate(date);
+    // var formattedDate = formatDate(date);
+    var formattedDate = formatDateYearFirst(date);
     setFirstBatch([]);
     setSecondBatch([]);
     setThirdBatch([]);

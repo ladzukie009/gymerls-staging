@@ -281,6 +281,7 @@ function DrawerAppBar(props) {
                                 display: "flex",
                                 padding: 1,
                                 border: "1px solid gray",
+                                width: "17rem",
                               }}
                             >
                               <Image
@@ -290,7 +291,12 @@ function DrawerAppBar(props) {
                                 width={250}
                                 sx={{ backgroundColor: "#fff" }}
                               />
-                              <Typography sx={{ fontWeight: "bold" }}>
+                              <Typography
+                                sx={{
+                                  fontWeight: "bold",
+                                  wordBreak: "break-word",
+                                }}
+                              >
                                 {item.product_name}
                               </Typography>
                               <Typography>{item.description}</Typography>
