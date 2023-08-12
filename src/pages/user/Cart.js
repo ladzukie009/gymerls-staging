@@ -35,6 +35,7 @@ function Cart() {
   const [item, setItem] = useState("");
 
   const [grandTotal, setGrandTotal] = useState(0);
+  const [totalQuantity, setTotalQuantity] = useState(0);
 
   // DIALOG BOX - CHECKOUT
   const [open, setOpen] = useState(false);
@@ -62,6 +63,12 @@ function Cart() {
 
         let t = 0;
         result.map(({ sub_total }) => (t = t + sub_total));
+
+        let q = 0;
+        result.map(({ quantity }) => (q = q + quantity));
+
+        setTotalQuantity(q);
+
         setGrandTotal(t);
       });
 
@@ -110,6 +117,7 @@ function Cart() {
 
         setCart(item); //useState
         mappingPrice(); //function
+        mappingTotalQuantity();
         return item;
       })
     );
@@ -119,6 +127,13 @@ function Cart() {
     let t = 0;
     cart.map(({ sub_total }) => (t = t + sub_total));
     setGrandTotal(t); //useState
+    return t;
+  };
+
+  const mappingTotalQuantity = () => {
+    let t = 0;
+    cart.map(({ quantity }) => (t = t + quantity));
+    setTotalQuantity(t);
     return t;
   };
 
@@ -134,6 +149,7 @@ function Cart() {
 
         setCart(item);
         mappingPrice();
+        mappingTotalQuantity();
         return item;
       })
     );
@@ -198,6 +214,14 @@ function Cart() {
   };
 
   const confirmCheckOut = () => {
+    // for (let item of cart) {
+    //   newCart.push(item.quantity + " X " + item.product_name);
+    // }
+    // var newItem = JSON.stringify(newCart).replace(/\[|\]/g, "");
+    // var replaceItem = newItem.replace(/"/g, "");
+    // console.log(replaceItem);
+    // setItem(replaceItem);
+
     Swal.fire({
       title: "Proceed to checkout?",
       text: "You can proceed and place your order.",
@@ -210,11 +234,9 @@ function Cart() {
         for (let post of cart) {
           deleteCartItemAfterCheckout(post.id);
         }
-
         for (let item of cart) {
-          newCart.push(item.product_name);
+          newCart.push(item.quantity + " X " + item.product_name);
         }
-
         var newItem = JSON.stringify(newCart).replace(/\[|\]/g, "");
         var replaceItem = newItem.replace(/"/g, "");
         setItem(replaceItem);
@@ -233,6 +255,7 @@ function Cart() {
             method: paymentMethod,
             address: address,
             items: replaceItem,
+            total_quantity: totalQuantity,
             total: grandTotal,
             status: "Pending",
             receipt_url: "image.jpg",

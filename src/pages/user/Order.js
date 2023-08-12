@@ -105,6 +105,7 @@ function Product() {
                     {/* <TableCell sx={{ fontWeight: "bold" }}>ADDRESS</TableCell> */}
                     <TableCell sx={{ fontWeight: "bold" }}>CONTACT</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>ITEMS</TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>QUANTITY</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>METHOD</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>TOTAL</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>
@@ -116,7 +117,7 @@ function Product() {
                 {tableHasNoData ? (
                   <TableBody>
                     <StyledTableRow>
-                      <TableCell align="center" colSpan={7}>
+                      <TableCell align="center" colSpan={8}>
                         {"No data available"}
                       </TableCell>
                     </StyledTableRow>
@@ -140,6 +141,7 @@ function Product() {
                             {/* <TableCell>{trans.address}</TableCell> */}
                             <TableCell>{trans.contact}</TableCell>
                             <TableCell>{trans.items}</TableCell>
+                            <TableCell>{trans.total_quantity}</TableCell>
                             <TableCell>{trans.method}</TableCell>
                             <TableCell>{trans.total}</TableCell>
                             <TableCell>
