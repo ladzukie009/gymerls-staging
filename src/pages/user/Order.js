@@ -11,8 +11,14 @@ import {
   TableBody,
   TablePagination,
   Chip,
+  Dialog,
+  DialogContent,
+  Button,
+  DialogActions,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { useTheme, styled } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import Image from "mui-image";
 
 function Product() {
   const [isLoading, setIsLoading] = useState(true);
@@ -80,6 +86,12 @@ function Product() {
     return formattedDate;
   };
 
+  const theme = useTheme();
+  const modalWidth = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [openModalReceipt, setOpenModalReceipt] = useState(false);
+  const [currentReceiptSelected, setCurrentReceiptSelected] = useState("");
+
   return (
     <>
       {isLoading ? (
@@ -93,6 +105,30 @@ function Product() {
         </div>
       ) : (
         <div>
+          {/* DIALOG FOR RECEIPT */}
+          <Dialog
+            fullScreen={modalWidth}
+            open={openModalReceipt}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogContent>
+              <Image
+                src={currentReceiptSelected}
+                alt="receipt.jpg"
+                onClick={() => setOpenModalReceipt(true)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => setOpenModalReceipt(false)}
+              >
+                CLOSE
+              </Button>
+            </DialogActions>
+          </Dialog>
+
           <Paper
             sx={{ width: "100%", overflow: "hidden", marginTop: "2rem" }}
             elevation={3}
@@ -111,13 +147,14 @@ function Product() {
                     <TableCell sx={{ fontWeight: "bold" }}>
                       TRANSACTION DATE
                     </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>RECEIPT</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>STATUS</TableCell>
                   </TableRow>
                 </TableHead>
                 {tableHasNoData ? (
                   <TableBody>
                     <StyledTableRow>
-                      <TableCell align="center" colSpan={8}>
+                      <TableCell align="center" colSpan={9}>
                         {"No data available"}
                       </TableCell>
                     </StyledTableRow>
@@ -148,10 +185,43 @@ function Product() {
                               {formatDate(trans.transaction_date)}
                             </TableCell>
                             <TableCell>
-                              {trans.status === "Pending" ? (
-                                <Chip label="Pending" color="warning" />
+                              {trans.receipt_url === "image.jpg" ? (
+                                <>No receipt</>
                               ) : (
-                                <Chip label="Completed" color="success" />
+                                <Image
+                                  src={trans.receipt_url}
+                                  alt="receipt.jpg"
+                                  onClick={() => {
+                                    setOpenModalReceipt(true);
+                                    setCurrentReceiptSelected(
+                                      trans.receipt_url
+                                    );
+                                  }}
+                                  height={50}
+                                  width={50}
+                                />
+                              )}
+                            </TableCell>
+
+                            <TableCell>
+                              {trans.status === "Pending" ? (
+                                <Chip
+                                  label="Pending"
+                                  color="warning"
+                                  sx={{ width: "8rem" }}
+                                />
+                              ) : trans.status === "Completed" ? (
+                                <Chip
+                                  label="Completed"
+                                  color="success"
+                                  sx={{ width: "8rem" }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="Out-Of-Stock"
+                                  color="error"
+                                  sx={{ width: "8rem" }}
+                                />
                               )}
                             </TableCell>
                           </StyledTableRow>

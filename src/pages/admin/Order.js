@@ -29,6 +29,7 @@ import Axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import PrintIcon from "@mui/icons-material/Print";
+import Image from "mui-image";
 
 function Product() {
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +58,10 @@ function Product() {
     {
       name: "completed",
       value: "Completed",
+    },
+    {
+      name: "out-of-stock",
+      value: "Out-Of-Stock",
     },
   ];
 
@@ -114,6 +119,11 @@ function Product() {
       value: "Completed",
       color: "#1976d2",
     },
+    {
+      name: "Out-Of-Stock",
+      value: "Out-Of-Stock",
+      color: "#d32f2f",
+    },
   ];
 
   const formatDate = (date) => {
@@ -164,7 +174,41 @@ function Product() {
       allowOutsideClick: false,
     }).then((result) => {
       if (result.isConfirmed) {
-        uploadImageToCloud(function (callback) {
+        if (imageFieldVisible) {
+          uploadImageToCloud(function (callback) {
+            fetch("https://gymerls-api-v2.vercel.app/api/update-transaction", {
+              method: "PATCH",
+              headers: {
+                "Content-type": "application/json",
+              },
+              body: JSON.stringify({
+                status: status,
+                receipt_url: imageFieldVisible ? callback : "image.jpg",
+                id: userId,
+              }),
+            })
+              .then((res) => res.json())
+              .then((result) => {
+                userLog(
+                  localStorage.getItem("username"),
+                  "Update",
+                  "transaction as",
+                  status
+                );
+
+                Swal.fire({
+                  title: "Transaction successfully updated!",
+                  icon: "success",
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(function () {
+                  setIsBtnLoading(false);
+                  setOpenModalUpdate(false);
+                  window.location.reload(false);
+                });
+              });
+          });
+        } else {
           fetch("https://gymerls-api-v2.vercel.app/api/update-transaction", {
             method: "PATCH",
             headers: {
@@ -172,7 +216,7 @@ function Product() {
             },
             body: JSON.stringify({
               status: status,
-              receipt_url: callback,
+              receipt_url: "image.jpg",
               id: userId,
             }),
           })
@@ -196,7 +240,7 @@ function Product() {
                 window.location.reload(false);
               });
             });
-        });
+        }
       }
     });
   };
@@ -252,6 +296,10 @@ function Product() {
     doc.save("orders.pdf");
   };
 
+  const [imageFieldVisible, setImageFieldVisible] = useState(true);
+  const [openModalReceipt, setOpenModalReceipt] = useState(false);
+  const [currentReceiptSelected, setCurrentReceiptSelected] = useState("");
+
   return (
     <>
       {isLoading ? (
@@ -286,6 +334,13 @@ function Product() {
                   sx={{ marginBottom: "1rem" }}
                   onChange={(e) => {
                     setStatus(e.target.value);
+                    if (e.target.value === "Pending") {
+                      setImageFieldVisible(false);
+                    } else if (e.target.value === "Out-Of-Stock") {
+                      setImageFieldVisible(false);
+                    } else {
+                      setImageFieldVisible(true);
+                    }
                   }}
                   defaultValue={"Completed"}
                   helperText="Please select status"
@@ -296,17 +351,29 @@ function Product() {
                     </MenuItem>
                   ))}
                 </TextField>
-                <TextField
-                  name="image_url"
-                  margin="dense"
-                  fullWidth
-                  sx={{ marginBottom: "1rem" }}
-                  type="file"
-                  onChange={(event) => {
-                    setUploadFile(event.target.files[0]);
-                  }}
-                  required
-                />
+                {imageFieldVisible ? (
+                  <TextField
+                    name="image_url"
+                    margin="dense"
+                    fullWidth
+                    sx={{ marginBottom: "1rem" }}
+                    type="file"
+                    onChange={(event) => {
+                      setUploadFile(event.target.files[0]);
+                    }}
+                    required
+                  />
+                ) : (
+                  <TextField
+                    name="image_url"
+                    margin="dense"
+                    fullWidth
+                    disabled
+                    sx={{ marginBottom: "1rem" }}
+                    type="file"
+                    required
+                  />
+                )}
               </div>
             </DialogContent>
             <DialogActions>
@@ -324,6 +391,30 @@ function Product() {
               >
                 <span>UPDATE</span>
               </LoadingButton>
+            </DialogActions>
+          </Dialog>
+
+          {/* DIALOG FOR RECEIPT */}
+          <Dialog
+            fullScreen={modalWidth}
+            open={openModalReceipt}
+            aria-labelledby="responsive-dialog-title"
+          >
+            <DialogContent>
+              <Image
+                src={currentReceiptSelected}
+                alt="receipt.jpg"
+                onClick={() => setOpenModalReceipt(true)}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => setOpenModalReceipt(false)}
+              >
+                CLOSE
+              </Button>
             </DialogActions>
           </Dialog>
 
@@ -384,6 +475,7 @@ function Product() {
                     <TableCell sx={{ fontWeight: "bold" }}>
                       TRANSACTION DATE
                     </TableCell>
+                    <TableCell sx={{ fontWeight: "bold" }}>RECEIPT</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>STATUS</TableCell>
                     <TableCell sx={{ fontWeight: "bold" }}>ACTION</TableCell>
                   </TableRow>
@@ -391,7 +483,7 @@ function Product() {
                 {tableHasNoData ? (
                   <TableBody>
                     <StyledTableRow>
-                      <TableCell align="center" colSpan={9}>
+                      <TableCell align="center" colSpan={10}>
                         {"No data available"}
                       </TableCell>
                     </StyledTableRow>
@@ -422,17 +514,41 @@ function Product() {
                               {formatDate(trans.transaction_date)}
                             </TableCell>
                             <TableCell>
+                              {trans.receipt_url === "image.jpg" ? (
+                                <>No receipt</>
+                              ) : (
+                                <Image
+                                  src={trans.receipt_url}
+                                  alt="receipt.jpg"
+                                  onClick={() => {
+                                    setOpenModalReceipt(true);
+                                    setCurrentReceiptSelected(
+                                      trans.receipt_url
+                                    );
+                                  }}
+                                  height={50}
+                                  width={50}
+                                />
+                              )}
+                            </TableCell>
+                            <TableCell>
                               {trans.status === "Pending" ? (
                                 <Chip
                                   label="Pending"
                                   color="warning"
-                                  sx={{ width: "6rem" }}
+                                  sx={{ width: "8rem" }}
                                 />
-                              ) : (
+                              ) : trans.status === "Completed" ? (
                                 <Chip
                                   label="Completed"
                                   color="success"
-                                  sx={{ width: "6rem" }}
+                                  sx={{ width: "8rem" }}
+                                />
+                              ) : (
+                                <Chip
+                                  label="Out-Of-Stock"
+                                  color="error"
+                                  sx={{ width: "8rem" }}
                                 />
                               )}
                             </TableCell>
