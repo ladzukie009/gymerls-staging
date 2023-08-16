@@ -467,11 +467,11 @@ function DrawerAppBar(props) {
                 >
                   <Image src="../images/new-qr.jpg" alt="qr-code.jpg" />
                   <Link
-                    to="https://shorturl.at/hioMR"
+                    to="https://shorturl.at/eknP9"
                     underline="always"
                     sx={{ textAlign: "center" }}
                   >
-                    {"https://shorturl.at/hioMR"}
+                    {"https://shorturl.at/eknP9"}
                   </Link>
                 </Stack>
               </Grid>
