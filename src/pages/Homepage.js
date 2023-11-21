@@ -105,7 +105,7 @@ function DrawerAppBar(props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar component="nav">
+      <AppBar component="nav" sx={{ bgcolor: "#ad0000" }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -191,6 +191,8 @@ function DrawerAppBar(props) {
           backgroundImage: "url(../images/homepage-bg.jpg)",
           backgroundAttachment: "fixed",
           backgroundPosition: "center",
+          // backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <Toolbar />
@@ -211,17 +213,25 @@ function DrawerAppBar(props) {
               padding: "2rem",
               textAlign: "left",
               opacity: 0.7,
+              bgcolor: "#f8f8a7",
             }}
           >
             <Stack>
               <Grid paddingLeft={"2rem"} borderLeft={"5px solid orange"}>
-                <Typography sx={{ fontSize: { xs: "1.75rem", md: "2rem" } }}>
+                <Typography
+                  sx={{
+                    fontSize: { xs: "1.75rem", md: "2rem" },
+                    color: "black",
+                  }}
+                >
                   ARE YOU READY TO
                 </Typography>
               </Grid>
             </Stack>
             <Stack>
-              <Typography sx={{ fontSize: { xs: "2rem", md: "3rem" } }}>
+              <Typography
+                sx={{ fontSize: { xs: "2rem", md: "3rem" }, color: "black" }}
+              >
                 GET FIT, STRONG <br />& MOTIVATED!
               </Typography>
             </Stack>
@@ -249,6 +259,7 @@ function DrawerAppBar(props) {
                 paddingY: 5,
                 minWidth: { xs: "100%", md: "70%" },
                 opacity: 0.9,
+                bgcolor: "#f8f8a7",
               }}
             >
               <Grid container>
@@ -364,6 +375,7 @@ function DrawerAppBar(props) {
               padding: "2rem",
               textAlign: "left",
               opacity: 0.9,
+              bgcolor: "#f8f8a7",
             }}
           >
             <Grid container sx={{ maxWidth: "1080px", margin: "0 auto" }}>
